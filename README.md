@@ -2,6 +2,7 @@ Continuous Delivery automation sandbox
 ======================================
 
 Set of Docker containers to run CD automation services
+
  - Gerrit Code Review,
  - Jenkins CI,
  - Sonatype Nexus.
@@ -35,7 +36,7 @@ Relogin to get 'docker' group membership.
 
 ### Fig
 
-[Fig](http://www.fig.sh/) - `make` for Docker.
+[Fig](http://www.fig.sh/) - Make for Docker.
 See [installation manual](http://www.fig.sh/install.html).
 
 ### GNU make
