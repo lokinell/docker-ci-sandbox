@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<org.jenkinsci.plugins.configfiles.maven.DefaultGlobalMavenSettingsProvider plugin="config-file-provider@2.7.4">
+  <configs>
+    <entry>
+      <string>org.jenkinsci.plugins.configfiles.maven.GlobalMavenSettingsConfig1403537409332</string>
+      <org.jenkinsci.plugins.configfiles.maven.GlobalMavenSettingsConfig>
+        <id>org.jenkinsci.plugins.configfiles.maven.GlobalMavenSettingsConfig1403537409332</id>
+        <name>ci-settings-global</name>
+        <comment>Global Maven settings shared by all projects</comment>
+        <content>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!--
+    Global Maven settings.xml.
+    Shared by all projects at the build server.
+--&gt;
+&lt;settings xmlns=&quot;http://maven.apache.org/SETTINGS/1.0.0&quot;
+          xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+          xsi:schemaLocation=&quot;http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd&quot;&gt;
+
+    &lt;interactiveMode&gt;false&lt;/interactiveMode&gt;
+
+    &lt;mirrors&gt;
+        &lt;mirror&gt;
+            &lt;id&gt;central&lt;/id&gt;
+            &lt;url&gt;${env.NEXUS_URL}/content/repositories/central&lt;/url&gt;
+            &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;
+        &lt;/mirror&gt;
+    &lt;/mirrors&gt;
+
+&lt;/settings&gt;</content>
+        <serverCredentialMappings/>
+      </org.jenkinsci.plugins.configfiles.maven.GlobalMavenSettingsConfig>
+    </entry>
+  </configs>
+</org.jenkinsci.plugins.configfiles.maven.DefaultGlobalMavenSettingsProvider>

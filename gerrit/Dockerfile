@@ -1,0 +1,68 @@
+# gerrit
+#
+# Gerrit code review and Git repositories server
+#
+# Build:
+# sudo docker build -t gerrit:latest .
+#
+# Run:
+# sudo docker run -d -p 127.0.0.1:8083:8080 -p 127.0.0.1:29418:29418 -h gerrit --name gerrit gerrit 
+#
+
+FROM ci-base
+MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
+
+EXPOSE 8080
+EXPOSE 29418
+
+ENV gerrit_version 2.9
+ENV TMP /tmp
+
+RUN apt-get -qy install openssh-client git gitweb
+
+# Gerrit user
+RUN useradd -c 'Gerrit code review' -d /var/lib/gerrit -M -N -g nogroup -r gerrit
+RUN mkdir ~gerrit && chown gerrit ~gerrit
+
+USER gerrit
+WORKDIR /var/lib/gerrit
+
+RUN mkdir etc
+
+# Generate SSH keys
+RUN ssh-keygen -q -t rsa -P '' -f etc/ssh_host_rsa_key \
+    && ssh-keygen -q -t dsa -P '' -f etc/ssh_host_dsa_key
+
+# Configure Gerrit DB and directories
+RUN git config -f etc/gerrit.config database.type h2 \
+    && git config -f etc/gerrit.config database.database db/ReviewDB \
+    && git config -f etc/gerrit.config gerrit.basePath git \
+    && git config -f etc/gerrit.config cache.directory cache
+
+# Install Gerrit
+RUN wget -q -O /tmp/gerrit.war "http://gerrit-releases.storage.googleapis.com/gerrit-${gerrit_version}.war" \
+    && java -jar /tmp/gerrit.war init -d . --batch --no-auto-start \
+        --install-plugin download-commands --install-plugin reviewnotes --install-plugin replication \
+    && rm /tmp/gerrit.war
+
+# Configure Gerrit
+RUN git config -f etc/gerrit.config gerrit.canonicalWebUrl http://localhost:8083/ \
+    && git config -f etc/gerrit.config auth.type DEVELOPMENT_BECOME_ANY_ACCOUNT \
+    && git config -f etc/gerrit.config sendemail.smtpServer localhost \
+    && git config -f etc/gerrit.config sshd.listenAddress *:29418 \
+    && git config -f etc/gerrit.config httpd.listenUrl http://*:8080/ \
+    && git config -f etc/gerrit.config gitweb.cgi /usr/lib/cgi-bin/gitweb.cgi
+
+# For Gerrit 2.9 (see https://gerrit-documentation.storage.googleapis.com/ReleaseNotes/ReleaseNotes-2.9.html#_important_notes)
+RUN java -jar bin/gerrit.war reindex -d . --recheck-mergeable
+
+# Bootstraping script & preserved Gerrit data for it
+ENV gerrit_save_dir /var/lib/gerrit/save
+RUN mkdir "$gerrit_save_dir" && cp -rl data db git "$gerrit_save_dir"
+COPY setup.sh /var/lib/gerrit/
+
+# Link to Jenkins
+COPY ssh/jenkins_id_rsa.pub /var/lib/gerrit/save/
+
+CMD ["bin/gerrit.sh", "run"]
+
