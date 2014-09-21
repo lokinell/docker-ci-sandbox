@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <hudson>
-  <version>1.554.2</version>
+  <version>1.565.2</version>
   <numExecutors>2</numExecutors>
   <mode>EXCLUSIVE</mode>
   <useSecurity>true</useSecurity>
@@ -94,6 +94,23 @@ jenkins robots</data>
   </securityRealm>
   <workspaceDir>/var/lib/jenkins-ws/${ITEM_FULLNAME}</workspaceDir>
   <buildsDir>/var/lib/jenkins-builds/${ITEM_FULLNAME}</buildsDir>
+  <jdks>
+    <jdk>
+      <name>jdk-7</name>
+      <home></home>
+      <properties>
+        <hudson.tools.InstallSourceProperty>
+          <installers>
+            <hudson.tools.ZipExtractionInstaller>
+              <label>java &amp;&amp; linux-x64</label>
+              <url>http://nexus:8081/nexus/content/repositories/thirdparty/com/oracle/java/jdk/7u60/jdk-7u60-linux-x64.tar.gz</url>
+              <subdir>jdk1.7.0_60</subdir>
+            </hudson.tools.ZipExtractionInstaller>
+          </installers>
+        </hudson.tools.InstallSourceProperty>
+      </properties>
+    </jdk>
+  </jdks>
   <slaves>
     <slave>
       <name>slave1</name>
