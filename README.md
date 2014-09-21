@@ -59,11 +59,13 @@ Generate SSH keys
 Create service containers
 -------------------------
 
-Service | URL
---------|----------------------
-gerrit  | http://localhost:8083
-nexus   | http://localhost:8082
-jenkins | http://localhost:8081
+Service | Username | Password | URL
+--------|----------|----------|----------------------
+gerrit  | admin    | -        | http://localhost:8083
+nexus   | admin    | admin123 | http://localhost:8082
+jenkins | admin    | admin    | http://localhost:8081
+
+Services use "development" authentication methods specific for the service.
 
 ### Container dependencies
 
