@@ -1,10 +1,14 @@
 #
-# Makefile to prepare the workspace for using Docker containers with Fig.
+# Makefile
+#  - to prepare the workspace for using Docker containers with Fig;
+#  - to upload build tools packages to Nexus.
 #
 
-.PHONY: all images keys clean
+#
+# Prepare the workspace for using Docker containers with Fig
+#
 
-all: images keys
+prepare: images keys
 
 keys: jenkins/keys jenkins-slave/keys gerrit/keys
 
@@ -14,6 +18,20 @@ images:
 
 clean: jenkins/clean jenkins-slave/clean gerrit/clean
 
+.PHONY: prepare images keys clean
+
+#
+# Upload build tools packages to Nexus
+#
+
+upload-tools: nexus/upload-tools
+
+.PHONY: upload-tools
+
+#
+# Utilities
+#
+
 jenkins/%:
 	$(MAKE) -C $(subst /$*,,$@) $*
 
@@ -21,5 +39,8 @@ jenkins-slave/%:
 	$(MAKE) -C $(subst /$*,,$@) $*
 
 gerrit/%:
+	$(MAKE) -C $(subst /$*,,$@) $*
+
+nexus/%:
 	$(MAKE) -C $(subst /$*,,$@) $*
 
