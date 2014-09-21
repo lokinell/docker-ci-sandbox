@@ -21,6 +21,21 @@
         </hudson.tools.InstallSourceProperty>
       </properties>
     </hudson.plugins.groovy.GroovyInstallation>
+    <hudson.plugins.groovy.GroovyInstallation>
+      <name>groovy-2.3</name>
+      <home></home>
+      <properties>
+        <hudson.tools.InstallSourceProperty>
+          <installers>
+            <hudson.tools.ZipExtractionInstaller>
+              <label>java</label>
+              <url>http://nexus:8081/nexus/content/repositories/thirdparty/org/codehaus/groovy/groovy-binary/2.3.6/groovy-binary-2.3.6.zip</url>
+              <subdir>groovy-2.3.6</subdir>
+            </hudson.tools.ZipExtractionInstaller>
+          </installers>
+        </hudson.tools.InstallSourceProperty>
+      </properties>
+    </hudson.plugins.groovy.GroovyInstallation>
   </installations2>
 </hudson.plugins.groovy.Groovy_-DescriptorImpl>
 
