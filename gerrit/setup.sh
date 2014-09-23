@@ -140,7 +140,7 @@ cd Open-Projects
 # Access configuration
 echo 'global:Registered-Users                 	Registered Users' >groups
 git add groups
-$config --add   access."refs/heads/*".owner             "group Registered Users"
+$config --add   access."refs/*".owner                   "group Registered Users"
 git commit -q -a -m "Initial access configuration"
 
 git push -q origin HEAD:refs/meta/config
