@@ -14,10 +14,6 @@ echo "Succeeded"
 
 cd ../sonatype-work
 
-[ ! -d nexus ] || exit 0
-
-
-# The following steps are for initial bootstrapping only
-mkdir nexus
+[ -d nexus ] || mkdir nexus
 chown nexus nexus
 
