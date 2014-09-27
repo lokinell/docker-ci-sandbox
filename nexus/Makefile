@@ -5,7 +5,7 @@
 # - Uploads distribution packages for build tools.
 #
 
-JDK7_VERSION=7u60
+JDK7_VERSION=7u67
 JDK7_FILE=jdk-$(JDK7_VERSION)-linux-x64.tar.gz
 
 MAVEN_VERSION=3.2.3

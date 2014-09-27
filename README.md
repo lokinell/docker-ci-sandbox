@@ -118,6 +118,20 @@ and then proceed with steps to bootstrap the volume container and start
 the service (see above).
 
 
+Upload bundles for Jenkins build tools 
+--------------------------------------
+
+Oracle JDK download cannot be automated. Get `jdk-7u67-linux-x64.tar.gz` from
+[OTN download page](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+and save to `nexus/upload` directory. The exact version of JDK is important -
+it is hard-coded in Nexus' [`Makefile`](nexus/Makefile) and Jenkins' 
+[`config.xml`](jenkins/fs/var/lib/jenkins/config.xml).
+
+Then upload installation bundles for build tools (JDK, Maven, Groovy) to Nexus:
+
+    make upload-tools
+
+
 Miscellaneous
 -------------
 
