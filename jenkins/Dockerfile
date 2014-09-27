@@ -45,13 +45,13 @@ RUN mkdir plugins && cd plugins \
 ENV plugin_site http://updates.jenkins-ci.org/download/plugins
 RUN cd plugins && echo \
     ${plugin_site}/mock-security-realm/1.1/mock-security-realm.hpi \
-    ${plugin_site}/git-client/1.10.1/git-client.hpi \
+    ${plugin_site}/git-client/1.10.2/git-client.hpi \
     ${plugin_site}/scm-api/0.2/scm-api.hpi \
-    ${plugin_site}/git/2.2.5/git.hpi \
+    ${plugin_site}/git/2.2.6/git.hpi \
     ${plugin_site}/ssh-agent/1.5/ssh-agent.hpi \
     ${plugin_site}/gerrit-trigger/2.11.1/gerrit-trigger.hpi \
     ${plugin_site}/token-macro/1.10/token-macro.hpi \
-    ${plugin_site}/groovy/1.20/groovy.hpi \
+    ${plugin_site}/groovy/1.21/groovy.hpi \
     ${plugin_site}/email-ext/2.38.2/email-ext.hpi \
     ${plugin_site}/config-file-provider/2.7.5/config-file-provider.hpi \
     ${plugin_site}/parameterized-trigger/2.25/parameterized-trigger.hpi \
