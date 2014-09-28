@@ -4,7 +4,6 @@
 #
 # Documentation:
 #  - https://help.ubuntu.com/12.04/serverguide/openldap-server.html
-#  - https://help.ubuntu.com/community/InstallingphpLDAPadmin
 
 FROM ubuntu:12.04
 MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>

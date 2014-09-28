@@ -59,18 +59,20 @@ Generate SSH keys
 Create service containers
 -------------------------
 
-Service | Username | Password | URL
---------|----------|----------|----------------------
-ldap    | admin(*) | admin    | -
-gerrit  | admin    | -        | http://localhost:8083
-nexus   | admin    | admin123 | http://localhost:8082
-jenkins | admin    | admin    | http://localhost:8081
+Service   | Username | Password | URL
+----------|----------|----------|----------------------
+ldapAdmin | admin(*) | admin    | http://localhost:8084/phpldapadmin
+gerrit    | admin    | -        | http://localhost:8083
+nexus     | admin    | admin123 | http://localhost:8082/nexus
+jenkins   | admin    | admin    | http://localhost:8081
 
 (*) LDAP administrator DN: cn=admin,dc=asf,dc=griddynamics,dc=com
 
 Services use "development" authentication methods specific for the service.
 
 ### Container dependencies
+
+    ldap --> ldapAdmin
 
     nexus          gerrit
      |  \          /  |

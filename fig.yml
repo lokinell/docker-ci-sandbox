@@ -11,6 +11,14 @@ ldap:
     build: ldap
     hostname: dev-ldap
 
+ldapAdmin:
+    build: ldap-admin
+    hostname: dev-ldap-admin
+    ports:
+        - 127.0.0.1:8084:80
+    links:
+        - ldap:ldap
+
 
 # Gerrit service
 #
