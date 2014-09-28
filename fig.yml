@@ -1,6 +1,17 @@
 # Fig (http://www.fig.sh) configuration file
 #
 
+# LDAP service
+#
+# To create and strart LDAP service container:
+#   $ fig up -d ldap
+#
+
+ldap:
+    build: ldap
+    hostname: dev-ldap
+
+
 # Gerrit service
 #
 # To create and strart Gerrit service container:
