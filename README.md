@@ -15,6 +15,9 @@ It works on recent Linux distributions supported by Docker, e.g.
 Ubuntu - 12.04 and up.
 MacOS requires some tweaks with network configuration.
 
+The whole setup is kept as simple as possible with minimum tools involved
+and minimum changes made to stock configurations.
+
 
 Install prerequisites
 ----------------------
