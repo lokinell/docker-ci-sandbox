@@ -5,11 +5,27 @@
 #
 # To create and strart LDAP service container:
 #   $ fig up -d ldap
+# To start web UI for it:
+#   $ fig up -d --no-recreate ldapAdmin
 #
 
 ldap:
     build: ldap
     hostname: dev-ldap
+    volumes_from:
+        - ldapVolume
+ldapInit:
+    build: ldap
+    user: root
+    command: sh -e ./setup.sh
+    volumes_from:
+        - ldapVolume
+    links:
+        - ldapVolume
+ldapVolume:
+    image: volume
+    volumes:
+        - /var/lib/ldap
 
 ldapAdmin:
     build: ldap-admin

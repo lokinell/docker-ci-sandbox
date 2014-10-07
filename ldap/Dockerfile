@@ -10,25 +10,21 @@ MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
 
 EXPOSE 389
 
-# Install OpenLDAP with a trick to set root domain to "asf.griddynamics.com" 
-RUN cp /etc/hosts /etc/hosts.save \
-    && awk -vh=`hostname` -vd=asf.griddynamics.com \
-        '$2==h {print $1, $2 "." d, $2 ; next} {print $0}' \
-        </etc/hosts.save >/etc/hosts \
-    && apt-get -q update && apt-get -qy install slapd ldap-utils \
-    && cp /etc/hosts.save /etc/hosts && rm /etc/hosts.save
-
-# Set admin password to "admin"
-RUN service slapd start \
-    && pass=`slappasswd -s "admin"` \
+# Pre-set configuration parameters for OpenLDAP server (slapd)
+RUN pass="admin" \
     && ( \
-        echo "dn: olcDatabase={1}hdb,cn=config"; \
-        echo "changetype: modify"; \
-        echo "replace: olcRootPW"; \
-        echo "olcRootPW: $pass"; \
-        echo "-" \
-    ) | ldapmodify -Y EXTERNAL -H ldapi:/// \
-    && killall slapd
+        echo "slapd	slapd/domain	string	asf.griddynamics.com"; \
+        echo "slapd	shared/organization	string	ASF"; \
+        echo "slapd	slapd/password1	password	$pass"; \
+        echo "slapd	slapd/password2	password	$pass"; \
+    ) | debconf-set-selections
 
+RUN export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true \
+    && apt-get -q update && apt-get -qy install ldap-utils slapd
+
+# 'setup' bootstraping script
+COPY setup.sh /etc/ldap/
+
+WORKDIR /etc/ldap
 CMD ["slapd", "-u", "openldap", "-h", "ldap:/// ldapi:///", "-F", "/etc/ldap/slapd.d", "-d", "Stats"]
 
