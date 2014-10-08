@@ -8,11 +8,14 @@ echo "Test environment configuration..."
 [ $(id -u) -eq 0 ]
 echo "Succeeded"
 
-chown openldap /var/lib/ldap
-
 [ ! -f /var/lib/ldap/DB_CONFIG ] || exit 0
 
 # The following steps are for initial bootstrapping only
+
+bind_dn="cn=admin,dc=asf,dc=griddynamics,dc=com"
+bind_pass="admin"
+
+chown openldap /var/lib/ldap
 
 # Create LDAP database
 su openldap -s /bin/sh -c "slapadd -v -n 1" <<_DB_INIT
@@ -21,15 +24,18 @@ objectClass: dcObject
 objectClass: organization
 o: ASF
 dc: asf
-
-dn: cn=admin,dc=asf,dc=griddynamics,dc=com
-objectClass: organizationalRole
-cn: admin
-description: LDAP administrator
 _DB_INIT
 
-# Create basic LDAP entities
-su openldap -s /bin/sh -c "slapadd -v -n 1" <<_ENTITIES
+# Populate LDAP DB with basic entries.
+#
+# Start LDAP daemon listening for local requests only
+# then feed it with LDAP data.
+slapd -u openldap -h "ldapi:///" -F /etc/ldap/slapd.d
+
+pass=`slappasswd -s "admin"`
+
+#ldapadd -Y EXTERNAL -H ldapi:/// <<_ENTITIES
+ldapadd -H ldapi:/// -x -D "$bind_dn" -w "$bind_pass" <<_ENTITIES
 dn: ou=people,dc=asf,dc=griddynamics,dc=com
 objectclass: organizationalUnit
 ou: people
@@ -37,5 +43,40 @@ ou: people
 dn: ou=groups,dc=asf,dc=griddynamics,dc=com
 objectclass: organizationalUnit
 ou: groups
+
+# System accounts
+
+dn: uid=admin,ou=people,dc=asf,dc=griddynamics,dc=com
+objectclass: inetOrgPerson
+cn: Administrator
+sn: Administrator
+uid: admin
+userpassword: ${pass}
+
+dn: uid=jenkins-bot,ou=people,dc=asf,dc=griddynamics,dc=com
+objectclass: inetOrgPerson
+cn: Jenkins CI
+sn: Jenkins CI
+uid: jenkins-bot
+
+# System groups
+
+dn: cn=admins,ou=groups,dc=asf,dc=griddynamics,dc=com
+objectclass: groupOfNames
+cn: admins
+member: uid=admin,ou=people,dc=asf,dc=griddynamics,dc=com
+
+dn: cn=users,ou=groups,dc=asf,dc=griddynamics,dc=com
+objectclass: groupOfNames
+cn: users
+member: uid=admin,ou=people,dc=asf,dc=griddynamics,dc=com
+
+dn: cn=robots,ou=groups,dc=asf,dc=griddynamics,dc=com
+objectclass: groupOfNames
+cn: robots
+member: uid=jenkins-bot,ou=people,dc=asf,dc=griddynamics,dc=com
 _ENTITIES
+
+# Terminate temporary LDAP daemon, wait a bit to let it exit gracefully
+killall -w slapd
 
