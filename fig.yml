@@ -4,6 +4,8 @@
 # LDAP service
 #
 # To create and strart LDAP service container:
+#   $ fig up --no-recreate ldapInit
+#   $ fig rm ldapInit
 #   $ fig up -d ldap
 # To start web UI for it:
 #   $ fig up -d --no-recreate ldapAdmin
@@ -132,9 +134,10 @@ jenkins:
         - jenkinsConfig
         - jenkinsData
     links:
-        - jenkinsSlave
+        - ldap:ldap
         - gerrit:gerrit
         - nexus:nexus
+        - jenkinsSlave
     environment:
         http_proxy:
 jenkinsInit:
