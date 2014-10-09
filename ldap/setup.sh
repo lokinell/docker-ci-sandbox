@@ -53,6 +53,8 @@ sn: Administrator
 uid: admin
 userpassword: ${pass}
 
+# TODO: Not sure if Jenkins user has to be an inetOrgPerson in ou=people,
+# or not just simpleSecurityObject elsewhere to distinguish from real people.
 dn: uid=jenkins-bot,ou=people,dc=asf,dc=griddynamics,dc=com
 objectclass: inetOrgPerson
 cn: Jenkins CI

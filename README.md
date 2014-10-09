@@ -72,18 +72,18 @@ Services use "development" authentication methods specific for the service.
 
 ### Container dependencies
 
-                               nexus ---\--------------\
-                                         v              v
-    ldapAdmin <-- ldap -------------> jenkins <-- jenkinsSlave
-                                         ^              ^
-                               gerrit --/--------------/
+                               nexus <--+--------------+
+                                         \              \
+    ldapAdmin --> ldap <------------- jenkins <-- jenkinsSlave
+                                         /              /
+                               gerrit <-+--------------+
 
-It means `fig up jenkins` brings up all 4 service containers Jenkins depends
+It means `fig up jenkins` also brings up 4 service containers Jenkins depends
 on.
 
 ### Start / Stop / Upgrade service containers
 
-Service (`{service}` below) - gerrit, jenkins, nexus.
+Service (`{service}` below) - gerrit, jenkins, nexus, ldap.
 To bootstrap volume container for a service data:
 
     fig up --no-recreate {service}Init
