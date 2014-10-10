@@ -60,6 +60,8 @@ gerrit:
         - 127.0.0.1:29418:29418
     volumes_from:
         - gerritVolume
+    links:
+        - ldap:ldap
     environment:
         http_proxy:
 

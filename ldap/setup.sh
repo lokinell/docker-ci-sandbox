@@ -50,6 +50,7 @@ dn: uid=admin,ou=people,dc=asf,dc=griddynamics,dc=com
 objectclass: inetOrgPerson
 cn: Administrator
 sn: Administrator
+displayname: System Administrator
 uid: admin
 userpassword: ${pass}
 

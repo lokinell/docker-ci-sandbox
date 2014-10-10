@@ -74,9 +74,9 @@ Services use "development" authentication methods specific for the service.
 
                                nexus <--+--------------+
                                          \              \
-    ldapAdmin --> ldap <------------- jenkins <-- jenkinsSlave
-                                         /              /
-                               gerrit <-+--------------+
+    ldapAdmin --> ldap <-+----------- jenkins <-- jenkinsSlave
+                          \              /              /
+                           +-- gerrit <-+--------------+
 
 It means `fig up jenkins` also brings up 4 service containers Jenkins depends
 on.
