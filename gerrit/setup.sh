@@ -120,6 +120,10 @@ $config --unset access."refs/*".read                    "group Anonymous Users" 
 $config --add   access."refs/*".read                    "group Project Owners"
 git commit -q -a -m "Remove anonymous access"
 
+# Access configuration - project creation
+$config --add   capability.createProject                "group Registered Users"
+git commit -q -a -m "Allow everyone to create projects"
+
 git push -q origin HEAD:refs/meta/config
 cd ..
 rm -rf All-Projects
