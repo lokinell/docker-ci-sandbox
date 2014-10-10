@@ -170,8 +170,8 @@ ssh -p $git_port $git_user@localhost gerrit create-account \
     --ssh-key "'$jenkins_key'" \
     --group "'Non-Interactive Users'" \
     --full-name "'Jenkins CI'" \
-    --email jenkins@cisandbox.asf.griddynamics.com \
-    jenkins
+    --email jenkins-bot@cisandbox.asf.griddynamics.com \
+    jenkins-bot
 _JENKINS_USER
 
 

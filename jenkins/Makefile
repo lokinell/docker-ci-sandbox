@@ -8,7 +8,7 @@ keys: $(addprefix ssh/,$(KEYS))
 
 ssh/id_rsa:
 	[ -d ssh ] || mkdir ssh
-	ssh-keygen -q -t rsa -P '' -C 'jenkins' -f $@
+	ssh-keygen -q -t rsa -P '' -C 'jenkins-bot' -f $@
 
 ssh/id_rsa.pub: ssh/id_rsa
 
