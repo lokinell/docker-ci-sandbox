@@ -167,16 +167,19 @@ ssh -p $git_port $git_user@localhost gerrit create-project \
 _PRIVATE_PROJECTS
 
 
-# Create account for Jenkins
+# Create account, groups.
+# TODO: map LDAP groups to Gerrit roles:
+#       "gerrit set-members" seems not working with LDAP groups out of the box.
 #
-su $user -c "sh -sex" <<_JENKINS_USER
+su $user -c "sh -sex" <<_USERS_AND_GROUPS
+# Jenkins account
 ssh -p $git_port $git_user@localhost gerrit create-account \
     --ssh-key "'$jenkins_key'" \
     --group "'Non-Interactive Users'" \
     --full-name "'Jenkins CI'" \
     --email jenkins-bot@cisandbox.asf.griddynamics.com \
     jenkins-bot
-_JENKINS_USER
+_USERS_AND_GROUPS
 
 
 # All done - stop Gerrit
