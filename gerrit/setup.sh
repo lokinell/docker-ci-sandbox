@@ -168,8 +168,6 @@ _PRIVATE_PROJECTS
 
 
 # Create account, groups.
-# TODO: map LDAP groups to Gerrit roles:
-#       "gerrit set-members" seems not working with LDAP groups out of the box.
 #
 su $user -c "sh -sex" <<_USERS_AND_GROUPS
 # Jenkins account
@@ -185,4 +183,19 @@ _USERS_AND_GROUPS
 # All done - stop Gerrit
 #
 bin/gerrit.sh stop
+
+
+# Map LDAP groups to Gerrit groups.
+# It's a workaround as "gerrit set-members" seems not working with LDAP groups.
+#
+su $user -c "sh -sex" <<_MAP_GROUPS
+java -jar bin/gerrit.war gsql <<_SQL
+INSERT INTO ACCOUNT_GROUP_BY_ID (GROUP_ID, INCLUDE_UUID)
+    SELECT GROUP_ID, 'ldap:cn=admins,ou=groups,dc=asf,dc=griddynamics,dc=com'
+        FROM ACCOUNT_GROUP_NAMES WHERE NAME='Administrators';
+INSERT INTO ACCOUNT_GROUP_BY_ID (GROUP_ID, INCLUDE_UUID)
+    SELECT GROUP_ID, 'ldap:cn=robots,ou=groups,dc=asf,dc=griddynamics,dc=com'
+        FROM ACCOUNT_GROUP_NAMES WHERE NAME='Non-Interactive Users';
+_SQL
+_MAP_GROUPS
 
