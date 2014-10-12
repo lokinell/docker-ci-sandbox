@@ -54,7 +54,7 @@ RUN git config -f etc/gerrit.config gerrit.canonicalWebUrl http://localhost:8083
     && git config -f etc/gerrit.config ldap.accountFullName displayName \
     && git config -f etc/gerrit.config ldap.accountEmailAddress mail \
     && git config -f etc/gerrit.config ldap.groupBase "ou=groups,dc=asf,dc=griddynamics,dc=com" \
-    && git config -f etc/gerrit.config ldap.groupMemberPattern '(&(objectClass=groupOfNames)(member=${dn}))' \
+    && git config -f etc/gerrit.config ldap.groupMemberPattern '(|(member=${dn})(uniqueMember=${dn}))' \
     && git config -f etc/gerrit.config sendemail.smtpServer localhost \
     && git config -f etc/gerrit.config sshd.listenAddress *:29418 \
     && git config -f etc/gerrit.config httpd.listenUrl http://*:8080/ \
