@@ -22,8 +22,8 @@ MVN=mvn -B
 # Nexus as it visible from host system
 NEXUS_URL=http://localhost:8082/nexus
 NEXUS_REPOSITORY=thirdparty
-NEXUS_USER=deployment
-NEXUS_PASSWORD=deployment123
+NEXUS_USER=jenkins-bot
+NEXUS_PASSWORD=jenkins
 
 
 #

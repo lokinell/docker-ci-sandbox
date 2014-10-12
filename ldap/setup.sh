@@ -32,8 +32,6 @@ _DB_INIT
 # then feed it with LDAP data.
 slapd -u openldap -h "ldapi:///" -F /etc/ldap/slapd.d
 
-pass=`slappasswd -s "admin"`
-
 ldapadd -H ldapi:/// -x -D "$bind_dn" -w "$bind_pass" <<_ENTITIES
 dn: ou=people,dc=asf,dc=griddynamics,dc=com
 objectclass: organizationalUnit
@@ -51,7 +49,7 @@ cn: Administrator
 sn: Administrator
 displayname: System Administrator
 uid: admin
-userpassword: ${pass}
+userpassword: $(slappasswd -s "admin")
 
 # TODO: Not sure if Jenkins user has to be an inetOrgPerson in ou=people,
 # or not just simpleSecurityObject elsewhere to distinguish from real people.
@@ -60,6 +58,7 @@ objectclass: inetOrgPerson
 cn: Jenkins CI
 sn: Jenkins CI
 uid: jenkins-bot
+userpassword: $(slappasswd -s "jenkins")
 
 # System groups
 
