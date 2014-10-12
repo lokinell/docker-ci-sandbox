@@ -62,31 +62,31 @@ Generate SSH keys
 Create service containers
 -------------------------
 
-Service | Username | Password | URL
---------|----------|----------|----------------------
-gerrit  | admin    | -        | http://localhost:8083
-nexus   | admin    | admin123 | http://localhost:8082
-jenkins | admin    | admin    | http://localhost:8081
+Service | Username    | Password    | URL
+--------|-------------|-------------|-----------------------------------
+ldap    | admin(\*)   | admin       | http://localhost:8084/phpldapadmin (\*\*\*)
+gerrit  | admin(\*\*) | admin(\*\*) | http://localhost:8083
+nexus   | admin(\*\*) | admin(\*\*) | http://localhost:8082/nexus
+jenkins | admin(\*\*) | admin(\*\*) | http://localhost:8081
 
-Services use "development" authentication methods specific for the service.
+(\*) LDAP administrator DN: cn=admin,dc=asf,dc=griddynamics,dc=com  
+(\*\*) Authentication is controlled by LDAP database.  
+(\*\*\*) LDAP UI is provided by ldapAdmin stateless service.
 
 ### Container dependencies
 
-    nexus          gerrit
-     |  \          /  |
-     |   V        V   |
-     |  jenkinsSlave  |
-     \________|_______/
-              |
-              V
-           jenkins
+                           +-- nexus <--+--------------+
+                          /              \              \
+    ldapAdmin --> ldap <-+----------- jenkins --> jenkinsSlave
+                          \              /              /
+                           +-- gerrit <-+--------------+
 
-It means `fig up jenkins` brings up all 4 service containers Jenkins depends
+It means `fig up jenkins` also brings up 4 service containers Jenkins depends
 on.
 
 ### Start / Stop / Upgrade service containers
 
-Service (`{service}` below) - gerrit, jenkins, nexus.
+Service (`{service}` below) - gerrit, jenkins, nexus, ldap.
 To bootstrap volume container for a service data:
 
     fig up --no-recreate {service}Init
@@ -133,6 +133,28 @@ it is hard-coded in Nexus' [`Makefile`](nexus/Makefile) and Jenkins'
 Then upload installation bundles for build tools (JDK, Maven, Groovy) to Nexus:
 
     make upload-tools
+
+
+Authentication
+--------------
+
+Services use LDAP provided by ldap service for authentication.
+
+Users in LDAP must be entities of `inetOrgPerson` class in `ou=people` subtree
+with `uid` attribute as RDN. The required attribures are:
+
+Attribute     | Content
+--------------|--------------------------------------
+**cn**        | "Firstname Lastname" (must be unique)
+**sn**        | "Lastname"
+displayName   | "Firstname Lastname"
+Email         | email address
+givenName     | "Firstname"
+**Password**  | password
+**User Name** | User ID (must be unique)
+
+User groups in LDAP must be of `groupOfNames` class in `ou=groups` subtree
+with `cn` as RDN.
 
 
 Miscellaneous

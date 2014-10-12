@@ -87,10 +87,18 @@
     <permission>hudson.scm.SCM.Tag:robots</permission>
     <permission>hudson.scm.SCM.Tag:users</permission>
   </authorizationStrategy>
-  <securityRealm class="org.jenkinsci.plugins.mocksecurityrealm.MockSecurityRealm" plugin="mock-security-realm@1.1">
-    <data>admin admins
-jenkins robots</data>
-    <randomDelay>false</randomDelay>
+  <securityRealm class="hudson.security.LDAPSecurityRealm">
+    <server>ldap</server>
+    <rootDN>dc=asf,dc=griddynamics,dc=com</rootDN>
+    <userSearchBase>ou=people</userSearchBase>
+    <userSearch>uid={0}</userSearch>
+    <groupSearchBase>ou=groups</groupSearchBase>
+    <managerDN>cn=admin,dc=asf,dc=griddynamics,dc=com</managerDN>
+    <!-- FIXME: hardcoded base64-encoded password. To encode:
+         echo "password" | base64
+    -->
+    <managerPassword>YWRtaW4=</managerPassword>
+    <disableMailAddressResolver>false</disableMailAddressResolver>
   </securityRealm>
   <workspaceDir>/var/lib/jenkins-ws/${ITEM_FULLNAME}</workspaceDir>
   <buildsDir>/var/lib/jenkins-builds/${ITEM_FULLNAME}</buildsDir>

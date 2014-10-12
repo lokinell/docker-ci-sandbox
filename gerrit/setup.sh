@@ -52,6 +52,8 @@ INSERT INTO ACCOUNTS (FULL_NAME, REGISTERED_ON, ACCOUNT_ID)
     VALUES ('Gerrit Administrator', now(), $uid);
 INSERT INTO ACCOUNT_EXTERNAL_IDS (ACCOUNT_ID, EXTERNAL_ID)
     VALUES ($uid, 'username:admin');
+INSERT INTO ACCOUNT_EXTERNAL_IDS (ACCOUNT_ID, EXTERNAL_ID)
+    VALUES ($uid, 'gerrit:admin');
 INSERT INTO ACCOUNT_EXTERNAL_IDS (ACCOUNT_ID, EMAIL_ADDRESS, EXTERNAL_ID)
     VALUES ($uid, '$email', 'mailto:$email');
 INSERT INTO ACCOUNT_GROUP_MEMBERS (ACCOUNT_ID, GROUP_ID)
@@ -118,6 +120,10 @@ $config --unset access."refs/*".read                    "group Anonymous Users" 
 $config --add   access."refs/*".read                    "group Project Owners"
 git commit -q -a -m "Remove anonymous access"
 
+# Access configuration - project creation
+$config --add   capability.createProject                "group Registered Users"
+git commit -q -a -m "Allow everyone to create projects"
+
 git push -q origin HEAD:refs/meta/config
 cd ..
 rm -rf All-Projects
@@ -161,19 +167,35 @@ ssh -p $git_port $git_user@localhost gerrit create-project \
 _PRIVATE_PROJECTS
 
 
-# Create account for Jenkins
+# Create account, groups.
 #
-su $user -c "sh -sex" <<_JENKINS_USER
+su $user -c "sh -sex" <<_USERS_AND_GROUPS
+# Jenkins account
 ssh -p $git_port $git_user@localhost gerrit create-account \
     --ssh-key "'$jenkins_key'" \
     --group "'Non-Interactive Users'" \
     --full-name "'Jenkins CI'" \
-    --email jenkins@cisandbox.asf.griddynamics.com \
-    jenkins
-_JENKINS_USER
+    --email jenkins-bot@cisandbox.asf.griddynamics.com \
+    jenkins-bot
+_USERS_AND_GROUPS
 
 
 # All done - stop Gerrit
 #
 bin/gerrit.sh stop
+
+
+# Map LDAP groups to Gerrit groups.
+# It's a workaround as "gerrit set-members" seems not working with LDAP groups.
+#
+su $user -c "sh -sex" <<_MAP_GROUPS
+java -jar bin/gerrit.war gsql <<_SQL
+INSERT INTO ACCOUNT_GROUP_BY_ID (GROUP_ID, INCLUDE_UUID)
+    SELECT GROUP_ID, 'ldap:cn=admins,ou=groups,dc=asf,dc=griddynamics,dc=com'
+        FROM ACCOUNT_GROUP_NAMES WHERE NAME='Administrators';
+INSERT INTO ACCOUNT_GROUP_BY_ID (GROUP_ID, INCLUDE_UUID)
+    SELECT GROUP_ID, 'ldap:cn=robots,ou=groups,dc=asf,dc=griddynamics,dc=com'
+        FROM ACCOUNT_GROUP_NAMES WHERE NAME='Non-Interactive Users';
+_SQL
+_MAP_GROUPS
 

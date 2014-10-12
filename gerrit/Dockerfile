@@ -47,7 +47,14 @@ RUN wget -q -O /tmp/gerrit.war "http://gerrit-releases.storage.googleapis.com/ge
 
 # Configure Gerrit
 RUN git config -f etc/gerrit.config gerrit.canonicalWebUrl http://localhost:8083/ \
-    && git config -f etc/gerrit.config auth.type DEVELOPMENT_BECOME_ANY_ACCOUNT \
+    && git config -f etc/gerrit.config auth.type LDAP \
+    && git config -f etc/gerrit.config ldap.server ldap://ldap \
+    && git config -f etc/gerrit.config ldap.accountBase 'ou=people,dc=asf,dc=griddynamics,dc=com' \
+    && git config -f etc/gerrit.config ldap.accountPattern 'uid=${username}' \
+    && git config -f etc/gerrit.config ldap.accountFullName displayName \
+    && git config -f etc/gerrit.config ldap.accountEmailAddress mail \
+    && git config -f etc/gerrit.config ldap.groupBase "ou=groups,dc=asf,dc=griddynamics,dc=com" \
+    && git config -f etc/gerrit.config ldap.groupMemberPattern '(|(member=${dn})(uniqueMember=${dn}))' \
     && git config -f etc/gerrit.config sendemail.smtpServer localhost \
     && git config -f etc/gerrit.config sshd.listenAddress *:29418 \
     && git config -f etc/gerrit.config httpd.listenUrl http://*:8080/ \

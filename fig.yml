@@ -1,6 +1,43 @@
 # Fig (http://www.fig.sh) configuration file
 #
 
+# LDAP service
+#
+# To create and strart LDAP service container:
+#   $ fig up --no-recreate ldapInit
+#   $ fig rm ldapInit
+#   $ fig up -d ldap
+# To start web UI for it:
+#   $ fig up -d --no-recreate ldapAdmin
+#
+
+ldap:
+    build: ldap
+    hostname: dev-ldap
+    volumes_from:
+        - ldapVolume
+ldapInit:
+    build: ldap
+    user: root
+    command: sh -e ./setup.sh
+    volumes_from:
+        - ldapVolume
+    links:
+        - ldapVolume
+ldapVolume:
+    image: volume
+    volumes:
+        - /var/lib/ldap
+
+ldapAdmin:
+    build: ldap-admin
+    hostname: dev-ldap-admin
+    ports:
+        - 127.0.0.1:8084:80
+    links:
+        - ldap:ldap
+
+
 # Gerrit service
 #
 # To create and strart Gerrit service container:
@@ -23,6 +60,8 @@ gerrit:
         - 127.0.0.1:29418:29418
     volumes_from:
         - gerritVolume
+    links:
+        - ldap:ldap
     environment:
         http_proxy:
 
@@ -60,6 +99,8 @@ nexus:
         - 127.0.0.1:8082:8081
     volumes_from:
         - nexusVolume
+    links:
+        - ldap:ldap
     environment:
         http_proxy:
 
@@ -97,9 +138,10 @@ jenkins:
         - jenkinsConfig
         - jenkinsData
     links:
-        - jenkinsSlave
+        - ldap:ldap
         - gerrit:gerrit
         - nexus:nexus
+        - jenkinsSlave
     environment:
         http_proxy:
 jenkinsInit:

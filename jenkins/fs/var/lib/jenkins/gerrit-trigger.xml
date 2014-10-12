@@ -7,8 +7,8 @@
         <gerritHostName>gerrit</gerritHostName>
         <gerritSshPort>29418</gerritSshPort>
         <gerritProxy></gerritProxy>
-        <gerritUserName>jenkins</gerritUserName>
-        <gerritEMail>jenkins@cisandbox.asf.griddynamics.com</gerritEMail>
+        <gerritUserName>jenkins-bot</gerritUserName>
+        <gerritEMail>jenkins-bot@cisandbox.asf.griddynamics.com</gerritEMail>
         <gerritAuthKeyFile>/var/lib/jenkins/.ssh/id_rsa</gerritAuthKeyFile>
         <useRestApi>false</useRestApi>
         <gerritBuildCurrentPatchesOnly>true</gerritBuildCurrentPatchesOnly>
