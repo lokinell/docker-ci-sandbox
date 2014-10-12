@@ -34,7 +34,6 @@ slapd -u openldap -h "ldapi:///" -F /etc/ldap/slapd.d
 
 pass=`slappasswd -s "admin"`
 
-#ldapadd -Y EXTERNAL -H ldapi:/// <<_ENTITIES
 ldapadd -H ldapi:/// -x -D "$bind_dn" -w "$bind_pass" <<_ENTITIES
 dn: ou=people,dc=asf,dc=griddynamics,dc=com
 objectclass: organizationalUnit
