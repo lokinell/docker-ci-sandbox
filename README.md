@@ -70,8 +70,6 @@ jenkins | admin(\*\*) | admin(\*\*) | http://localhost:8081
 (\*\*) Authentication is controlled by LDAP database.  
 (\*\*\*) LDAP UI is provided by ldapAdmin stateless service.
 
-Services use "development" authentication methods specific for the service.
-
 ### Container dependencies
 
                            +-- nexus <--+--------------+
@@ -132,6 +130,28 @@ it is hard-coded in Nexus' [`Makefile`](nexus/Makefile) and Jenkins'
 Then upload installation bundles for build tools (JDK, Maven, Groovy) to Nexus:
 
     make upload-tools
+
+
+Authentication
+--------------
+
+Services use LDAP provided by ldap service for authentication.
+
+Users in LDAP must be entities of `inetOrgPerson` class in `ou=people` subtree
+with `uid` attribute as RDN. The required attribures are:
+
+Attribute     | Content
+--------------|--------------------------------------
+**cn**        | "Firstname Lastname" (must be unique)
+**sn**        | "Lastname"
+displayName   | "Firstname Lastname"
+Email         | email address
+givenName     | "Firstname"
+**Password**  | password
+**User Name** | User ID (must be unique)
+
+User groups in LDAP must be of `groupOfNames` class in `ou=groups` subtree
+with `cn` as RDN.
 
 
 Miscellaneous
