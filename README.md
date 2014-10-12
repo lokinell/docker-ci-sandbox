@@ -59,15 +59,16 @@ Generate SSH keys
 Create service containers
 -------------------------
 
-Service   | Username  | Password  | URL
-----------|-----------|-----------|-----------------------------------
-ldapAdmin | admin(*)  | admin     | http://localhost:8084/phpldapadmin
-gerrit    | admin(**) | admin(**) | http://localhost:8083
-nexus     | admin(**) | admin(**) | http://localhost:8082/nexus
-jenkins   | admin(**) | admin(**) | http://localhost:8081
+Service | Username  | Password  | URL
+--------|-----------|-----------|-----------------------------------
+ldap    | admin(*)  | admin     | http://localhost:8084/phpldapadmin (***)
+gerrit  | admin(**) | admin(**) | http://localhost:8083
+nexus   | admin(**) | admin(**) | http://localhost:8082/nexus
+jenkins | admin(**) | admin(**) | http://localhost:8081
 
-(*) LDAP administrator DN: cn=admin,dc=asf,dc=griddynamics,dc=com
-(**) Authentication is controlled by LDAP database.
+( * ) LDAP administrator DN: cn=admin,dc=asf,dc=griddynamics,dc=com  
+( ** ) Authentication is controlled by LDAP database.  
+( *** ) LDAP UI is provided by ldapAdmin stateless service.
 
 Services use "development" authentication methods specific for the service.
 
@@ -75,7 +76,7 @@ Services use "development" authentication methods specific for the service.
 
                            +-- nexus <--+--------------+
                           /              \              \
-    ldapAdmin --> ldap <-+----------- jenkins <-- jenkinsSlave
+    ldapAdmin --> ldap <-+----------- jenkins --> jenkinsSlave
                           \              /              /
                            +-- gerrit <-+--------------+
 
