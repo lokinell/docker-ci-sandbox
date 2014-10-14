@@ -4,34 +4,26 @@
 # LDAP service
 #
 # To create and strart LDAP service container:
-#   $ fig up --no-recreate ldapInit
-#   $ fig rm ldapInit
 #   $ fig up -d ldap
 # To start web UI for it:
 #   $ fig up -d --no-recreate ldapAdmin
 #
+# Parameters as environment variables:
+#   ldap_admin_pw - LDAP administrator password
+#
 
 ldap:
     build: ldap
-    hostname: dev-ldap
-    volumes_from:
-        - ldapVolume
-ldapInit:
-    build: ldap
-    user: root
-    command: sh -e ./setup.sh
-    volumes_from:
-        - ldapVolume
-    links:
-        - ldapVolume
-ldapVolume:
-    image: volume
+    hostname: ldap
     volumes:
         - /var/lib/ldap
+        - /run/lock
+    environment:
+        ldap_admin_pw: admin
 
 ldapAdmin:
     build: ldap-admin
-    hostname: dev-ldap-admin
+    hostname: ldap-admin
     ports:
         - 127.0.0.1:8084:80
     links:

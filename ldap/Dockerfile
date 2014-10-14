@@ -22,9 +22,10 @@ RUN pass="admin" \
 RUN export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true \
     && apt-get -q update && apt-get -qy install ldap-utils slapd
 
-# 'setup' bootstraping script
-COPY setup.sh /etc/ldap/
+# entrypoint script handles DB initialization
+COPY entrypoint.sh /entrypoint
+RUN chmod 700 /entrypoint
 
-WORKDIR /etc/ldap
+ENTRYPOINT ["/entrypoint"]
 CMD ["slapd", "-u", "openldap", "-h", "ldap:/// ldapi:///", "-F", "/etc/ldap/slapd.d", "-d", "Stats"]
 
