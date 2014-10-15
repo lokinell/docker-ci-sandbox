@@ -16,7 +16,9 @@ ldap_admin_dn="cn=admin,dc=asf,dc=griddynamics,dc=com"
 # to be passed from Docker command line or fig.yml:
 #
 echo "Test environment configuration..."
-[ "$ldap_admin_pw" ]
+[ "$ldap_admin_password" ]
+[ "$system_admin_password" ]
+[ "$jenkins_bot_password" ]
 echo "Succeeded"
 
 
@@ -31,13 +33,13 @@ ldapmodify -Q -Y EXTERNAL -H ldapi:/// <<_ADMIN_PASSWORD
 dn: olcDatabase={1}hdb,cn=config
 changetype: modify
 replace: olcRootPW
-olcRootPW: $(slappasswd -s "$ldap_admin_pw")
+olcRootPW: $(slappasswd -s "$ldap_admin_password")
 -
 _ADMIN_PASSWORD
 
 # Populate LDAP DB with basic entries.
 #
-ldapadd -H ldapi:/// -x -D "$ldap_admin_dn" -w "$ldap_admin_pw" <<_ENTITIES
+ldapadd -H ldapi:/// -x -D "$ldap_admin_dn" -w "$ldap_admin_password" <<_ENTITIES
 dn: ou=people,dc=asf,dc=griddynamics,dc=com
 objectclass: organizationalUnit
 ou: people
@@ -54,7 +56,7 @@ cn: Administrator
 sn: Administrator
 displayname: System Administrator
 uid: admin
-userpassword: $(slappasswd -s "admin")
+userpassword: $(slappasswd -s "$system_admin_password")
 
 # TODO: Not sure if Jenkins user has to be an inetOrgPerson in ou=people,
 # or not just simpleSecurityObject elsewhere to distinguish from real people.
@@ -63,7 +65,7 @@ objectclass: inetOrgPerson
 cn: Jenkins CI
 sn: Jenkins CI
 uid: jenkins-bot
-userpassword: $(slappasswd -s "jenkins")
+userpassword: $(slappasswd -s "$jenkins_bot_password")
 
 # System groups
 

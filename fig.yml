@@ -19,7 +19,9 @@ ldap:
         - /var/lib/ldap
         - /run/lock
     environment:
-        ldap_admin_pw: admin
+        ldap_admin_password: admin
+        system_admin_password: admin
+        jenkins_bot_password: jenkins
 
 ldapAdmin:
     build: ldap-admin
