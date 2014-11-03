@@ -161,7 +161,7 @@
           </default>
           <int>2</int>
           <string>GIT_SERVER_URL</string>
-          <string>ssh://jenkins@gerrit:29418</string>
+          <string>ssh://jenkins-bot@gerrit:29418</string>
           <string>NEXUS_URL</string>
           <string>http://nexus:8081/nexus</string>
         </tree-map>

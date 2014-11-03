@@ -171,6 +171,7 @@ _PRIVATE_PROJECTS
 #
 su $user -c "sh -sex" <<_USERS_AND_GROUPS
 # Jenkins account
+# FIXME: It overlaps with Jenkins account in LDAP
 ssh -p $git_port $git_user@localhost gerrit create-account \
     --ssh-key "'$jenkins_key'" \
     --group "'Non-Interactive Users'" \
