@@ -77,7 +77,7 @@ jenkins | admin(\*\*) | admin(\*\*) | http://localhost:8081
 
                            +-- nexus <--+--------------+
                           /              \              \
-    ldapAdmin --> ldap <-+----------- jenkins --> jenkinsSlave
+    ldapadmin --> ldap <-+----------- jenkins --> jenkinsslave
                           \              /              /
                            +-- gerrit <-+--------------+
 
@@ -89,13 +89,13 @@ on.
 Service (`{service}` below) - gerrit, jenkins, nexus, ldap.
 To bootstrap volume container for a service data:
 
-    fig up --no-recreate {service}Init
-    fig rm {service}Init
+    fig up --no-recreate {service}init
+    fig rm {service}init
 
 [Volume container](https://docs.docker.com/userguide/dockervolumes/) facilitate
 data sharing between containers. For example it allows service upgrade without
 loosing data.
-Without data volumes (without `fig up {service}Init`) service data will not
+Without data volumes (without `fig up {service}init`) service data will not
 persist between container re-creations. Also they will not be configured
 to work together.
 
@@ -114,7 +114,7 @@ start it again:
 Upgrade to the current code rebuild the images, stop the service:
 
     fig build {service}
-    fig build {service}Init
+    fig build {service}init
     fig stop {service}
 
 and then proceed with steps to bootstrap the volume container and start
@@ -145,13 +145,13 @@ with `uid` attribute as RDN. The required attribures are:
 
 Attribute     | Content
 --------------|--------------------------------------
-**cn**        | "Firstname Lastname" (must be unique)
+**cn**        | User ID (must be unique)
 **sn**        | "Lastname"
 displayName   | "Firstname Lastname"
 Email         | email address
 givenName     | "Firstname"
 **Password**  | password
-**User Name** | User ID (must be unique)
+**User Name** | Same as **cn**
 
 User groups in LDAP must be of `groupOfNames` class in `ou=groups` subtree
 with `cn` as RDN.
