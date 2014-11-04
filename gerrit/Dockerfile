@@ -69,7 +69,7 @@ RUN mkdir "$gerrit_save_dir" && cp -rl data db git "$gerrit_save_dir"
 COPY setup.sh /var/lib/gerrit/
 
 # Link to Jenkins
-COPY ssh/jenkins_id_rsa.pub /var/lib/gerrit/save/
+COPY ssh/jenkins_id_rsa.pub ssh/jenkinsslave_id_rsa.pub /var/lib/gerrit/save/
 
 CMD ["bin/gerrit.sh", "run"]
 

@@ -33,6 +33,7 @@ fi
 # Restore archived Gerrit data.
 #
 jenkins_key=`cat "$gerrit_save_dir/jenkins_id_rsa.pub"`
+jenkinsslave_key=`cat "$gerrit_save_dir/jenkinsslave_id_rsa.pub"`
 chown $user data db git
 su $user -c "sh -sex" <<_RESTORE
 cd "$gerrit_save_dir"
@@ -177,6 +178,9 @@ ssh -p $git_port $git_user@localhost gerrit create-account \
     --group "'Non-Interactive Users'" \
     --full-name "'Jenkins CI'" \
     --email jenkins-bot@cisandbox.asf.griddynamics.com \
+    jenkins-bot
+ssh -p $git_port $git_user@localhost gerrit set-account \
+    --add-ssh-key "'$jenkinsslave_key'" \
     jenkins-bot
 _USERS_AND_GROUPS
 
