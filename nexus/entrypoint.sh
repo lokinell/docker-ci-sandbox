@@ -1,40 +1,39 @@
 #!/bin/sh -e
 #
-# Initialize Nexus data
-#
-# Assume the current directory (set by WORKDIR in Dockerfile)
-# is Nexus home directory.
+# Docker container ENTRYPOINT for nexus
 #
 
-# Expected environment variables
-echo "Test environment configuration..."
-[ -f `basename "$0"` ]
-[ "$TMP" ]
-[ $(id -u) -eq 0 ]
-echo "Succeeded"
-
-user=nexus
-
-cd ../sonatype-work
-[ ! -d nexus/conf ] || exit 0
+[ ! -f /run/lock/initialized ] || exec "$@"
 
 
 # The following steps are for initial bootstrapping only
 
+workdir=$(pwd)
+
+# Expected environment variables
+# to be passed from Docker command line or fig.yml:
+#
+echo "Test environment configuration..."
+[ "$ldap_admin_password" ]
+echo "Succeeded"
+
+cd ../sonatype-work
+
 mkdir -p nexus/conf
-chown -R $user nexus
 cd nexus
 
+save_umask=$(umask)
+umask 0077
+
 # LDAP server connection
-su $user -c "cat >conf/ldap.xml" <<_LDAP_XML
+cat >conf/ldap.xml <<_LDAP_XML
 <?xml version="1.0" encoding="UTF-8"?>
 <ldapConfiguration>
   <version>2.8.0</version>
   <connectionInfo>
     <searchBase>dc=asf,dc=griddynamics,dc=com</searchBase>
     <systemUsername>cn=admin,dc=asf,dc=griddynamics,dc=com</systemUsername>
-    <!-- FIXME: Hard-coded encrypted password to LDAP server -->
-    <systemPassword>CMkW0HMMRFCK9kUsr00=</systemPassword>
+    <systemPassword>${ldap_admin_password}</systemPassword>
     <authScheme>simple</authScheme>
     <protocol>ldap</protocol>
     <host>ldap</host>
@@ -55,10 +54,9 @@ su $user -c "cat >conf/ldap.xml" <<_LDAP_XML
   </userAndGroupConfig>
 </ldapConfiguration>
 _LDAP_XML
-chmod 640 conf/ldap.xml
 
 # Map LDAP groups to Nexus roles
-su $user -c "cat >conf/security.xml" <<_SECURITY_XML
+cat >conf/security.xml <<_SECURITY_XML
 <?xml version="1.0" encoding="UTF-8"?>
 <security>
   <version>2.0.5</version>
@@ -111,9 +109,8 @@ su $user -c "cat >conf/security.xml" <<_SECURITY_XML
   </userRoleMappings>
 </security>
 _SECURITY_XML
-chmod 640 conf/security.xml
 
-su $user -c "cat >conf/security-configuration.xml" <<_SECURITY_CONFIGURATION_XML
+cat >conf/security-configuration.xml <<_SECURITY_CONFIGURATION_XML
 <?xml version="1.0"?>
 <security-configuration>
   <version>2.0.8</version>
@@ -128,5 +125,12 @@ su $user -c "cat >conf/security-configuration.xml" <<_SECURITY_CONFIGURATION_XML
   <hashIterations>1024</hashIterations>
 </security-configuration>
 _SECURITY_CONFIGURATION_XML
-chmod 640 conf/security-configuration.xml
+
+umask $save_umask
+cd "$workdir"
+
+
+# Proceed with CMD
+touch /run/lock/initialized
+exec "$@"
 

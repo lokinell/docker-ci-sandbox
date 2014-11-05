@@ -81,38 +81,22 @@ gerritVolume:
 # Nexus service
 #
 # To create and strart Nexus service container:
-#   $ fig up nexusInit
-#   $ fig rm nexusInit
 #   $ fig up -d nexus
 #
 
 nexus:
     build: nexus
-    hostname: dev-nexus
+    hostname: nexus
     ports:
         - 127.0.0.1:8082:8081
-    volumes_from:
-        - nexusVolume
+    volumes:
+        - /var/lib/sonatype-work/nexus
+        - /run/lock
     links:
         - ldap:ldap
     environment:
+        ldap_admin_password: admin
         http_proxy:
-
-nexusInit:
-    build: nexus
-    user: root
-    command: sh -e ./setup.sh
-    volumes_from:
-        - nexusVolume
-    links:
-        - nexusVolume
-    environment:
-        http_proxy:
-
-nexusVolume:
-    image: volume
-    volumes:
-        - /var/lib/sonatype-work/nexus
 
 
 # Jenkins service

@@ -20,22 +20,14 @@ ENV TMP /tmp
 # Nexus user
 RUN useradd -c 'Nexus repository server' -d /var/lib/nexus -M -N -g nogroup -r nexus
 
-# Runtime data dir
-RUN mkdir /var/run/nexus && chown nexus:root /var/run/nexus
-
-# Make /var/lib world-writable to allow installation by Nexus user
-RUN chmod o+w /var/lib
-
-USER nexus
-WORKDIR /var/lib
-
 # Download and install Nexus
-RUN wget -q -O /tmp/nexus-bundle.tar.gz http://www.sonatype.org/downloads/nexus-${nexus_version}-bundle.tar.gz \
+RUN cd /var/lib \
+    && wget -q -O /tmp/nexus-bundle.tar.gz http://www.sonatype.org/downloads/nexus-${nexus_version}-bundle.tar.gz \
     && checksum=$(wget -q -O- http://www.sonatype.org/downloads/nexus-${nexus_version}-bundle.tar.gz.sha1) \
     && [ $(sha1sum /tmp/nexus-bundle.tar.gz | cut -f1 -d' ') = $checksum ] \
-    && nexus_name=$(tar -tzf /tmp/nexus-bundle.tar.gz | grep "^nexus-${nexus_version}-" | cut -f1 -d/ | sort -u) \
     && tar -xzf /tmp/nexus-bundle.tar.gz \
-    && ln -s $nexus_name nexus \
+    && ln -s nexus-${nexus_version}* nexus \
+    && chown -R nexus sonatype-work/nexus \
     && rm /tmp/nexus-bundle.tar.gz
 
 WORKDIR /var/lib/nexus
@@ -46,12 +38,19 @@ RUN sed -e 's:^#*\(RUN_AS_USER\)=.*:\1=nexus:' \
     -e 's:\<\(wrapper.daemonize\)=[^ ]\+:\1=FALSE:' \
     -i bin/nexus
 
-# 'setup' bootstraping script
-COPY setup.sh /var/lib/nexus/
+# Runtime data dir
+RUN mkdir /var/run/nexus && chown nexus:root /var/run/nexus
 
-USER root
-RUN chmod o-w /var/lib
+# Data dirs for JSW
+# TODO: Get rid of it
+RUN chown nexus logs tmp
+
+# entrypoint script handles initialization
+COPY entrypoint.sh /entrypoint
+RUN chown nexus /entrypoint && chmod 700 /entrypoint
 
 USER nexus
+
+ENTRYPOINT ["/entrypoint"]
 CMD ["bin/nexus", "start"]
 
