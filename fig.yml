@@ -35,47 +35,24 @@ ldapAdmin:
 # Gerrit service
 #
 # To create and strart Gerrit service container:
-#   $ fig up --no-recreate gerritInit
-#   $ fig rm gerritInit
 #   $ fig up -d gerrit
-#
-# To upgrade
-#   $ fig stop gerrit
-#   $ fig build gerrit
-#   $ fig build gerritInit
-# then follow the steps above to create and start Gerrit service container.
 #
 
 gerrit:
     build: gerrit
-    hostname: dev-gerrit
+    hostname: gerrit
     ports:
         - 127.0.0.1:8083:8080
         - 127.0.0.1:29418:29418
-    volumes_from:
-        - gerritVolume
-    links:
-        - ldap:ldap
-    environment:
-        http_proxy:
-
-gerritInit:
-    build: gerrit
-    user: root
-    command: sh -e ./setup.sh
-    volumes_from:
-        - gerritVolume
-    links:
-        - gerritVolume
-    environment:
-        http_proxy:
-
-gerritVolume:
-    image: volume
     volumes:
         - /var/lib/gerrit/data
         - /var/lib/gerrit/db
         - /var/lib/gerrit/git
+        - /run/lock
+    links:
+        - ldap:ldap
+    environment:
+        http_proxy:
 
 
 # Nexus service
