@@ -79,19 +79,19 @@ nexus:
 # Jenkins service
 #
 # To create and strart Jenkins service container:
-#   $ fig up jenkinsInit
-#   $ fig rm jenkinsInit
 #   $ fig up -d jenkins
 #
 
 jenkins:
     build: jenkins
-    hostname: dev-jenkins
+    hostname: jenkins
     ports:
         - 127.0.0.1:8081:8080
-    volumes_from:
-        - jenkinsConfig
-        - jenkinsData
+    volumes:
+        - /var/lib/jenkins
+        - /var/lib/jenkins-builds
+        - /var/lib/jenkins-ws
+        - /run/lock
     links:
         - ldap:ldap
         - gerrit:gerrit
@@ -99,27 +99,6 @@ jenkins:
         - jenkinsSlave
     environment:
         http_proxy:
-jenkinsInit:
-    build: jenkins
-    user: root
-    command: setup
-    volumes_from:
-        - jenkinsConfig
-        - jenkinsData
-    links:
-        - jenkinsConfig
-        - jenkinsData
-    environment:
-        http_proxy:
-jenkinsConfig:
-    image: volume
-    volumes:
-        - /var/lib/jenkins
-jenkinsData:
-    image: volume
-    volumes:
-        - /var/lib/jenkins-builds
-        - /var/lib/jenkins-ws
 
 
 # Jenkins slave
