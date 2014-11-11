@@ -14,7 +14,6 @@ keys: jenkins/keys jenkins-slave/keys gerrit/keys
 
 images:
 	docker build -t ci-base:latest ci-base
-	docker build -t volume:latest volume
 
 clean: jenkins/clean jenkins-slave/clean gerrit/clean
 
