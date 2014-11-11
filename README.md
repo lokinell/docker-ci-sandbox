@@ -87,17 +87,9 @@ on.
 ### Start / Stop / Upgrade service containers
 
 Service (`{service}` below) - gerrit, jenkins, nexus, ldap.
-To bootstrap volume container for a service data:
-
-    fig up --no-recreate {service}Init
-    fig rm {service}Init
-
-[Volume container](https://docs.docker.com/userguide/dockervolumes/) facilitate
-data sharing between containers. For example it allows service upgrade without
-loosing data.
-Without data volumes (without `fig up {service}Init`) service data will not
-persist between container re-creations. Also they will not be configured
-to work together.
+Services data is persisted in
+[Docker volumes](https://docs.docker.com/userguide/dockervolumes/) attached to
+the service containers.
 
 Create and start a service container:
 
@@ -114,14 +106,11 @@ start it again:
 Upgrade to the current code rebuild the images, stop the service:
 
     fig build {service}
-    fig build {service}Init
-    fig stop {service}
 
-and then proceed with steps to bootstrap the volume container and start
-the service (see above).
+and then proceed with steps to start the service (see above).
 
 
-Upload bundles for Jenkins build tools 
+Upload bundles for Jenkins build tools
 --------------------------------------
 
 Oracle JDK download cannot be automated. Get `jdk-7u67-linux-x64.tar.gz` from
