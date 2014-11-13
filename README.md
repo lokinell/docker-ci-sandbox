@@ -62,16 +62,17 @@ Generate SSH keys
 Create service containers
 -------------------------
 
-Service | Username    | Password    | URL
---------|-------------|-------------|-----------------------------------
-ldap    | admin(\*)   | admin       | http://localhost:8084/phpldapadmin (\*\*\*)
-gerrit  | admin(\*\*) | admin(\*\*) | http://localhost:8083
-nexus   | admin(\*\*) | admin(\*\*) | http://localhost:8082/nexus
-jenkins | admin(\*\*) | admin(\*\*) | http://localhost:8081
+Service      | Username    | Password    | URL
+-------------|-------------|-------------|-----------------------------------
+ldap         | admin(\*)   | admin       | -
+ldapadmin    | admin(\*)   | admin       | http://localhost:8084/phpldapadmin
+gerrit       | admin(\*\*) | admin(\*\*) | http://localhost:8083
+nexus        | admin(\*\*) | admin(\*\*) | http://localhost:8082/nexus
+jenkins      | admin(\*\*) | admin(\*\*) | http://localhost:8081
+jenkinsslave | -           | -           | -
 
 (\*) LDAP administrator DN: cn=admin,dc=asf,dc=griddynamics,dc=com  
-(\*\*) Authentication is controlled by LDAP database.  
-(\*\*\*) LDAP UI is provided by ldapAdmin stateless service.
+(\*\*) Authentication is controlled by LDAP database.
 
 ### Container dependencies
 
@@ -108,6 +109,11 @@ Upgrade to the current code rebuild the images, stop the service:
     fig build {service}
 
 and then proceed with steps to start the service (see above).
+
+To perform an action (create, start, stop etc) on the whole setup use the above
+commands without `{service}`, for example
+
+    fig up -d
 
 
 Upload bundles for Jenkins build tools
