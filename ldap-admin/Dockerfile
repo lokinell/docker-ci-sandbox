@@ -5,12 +5,12 @@
 # Documentation:
 #  - https://help.ubuntu.com/community/InstallingphpLDAPadmin
 
-FROM ubuntu:12.04
+FROM ci-base
 MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
 
 EXPOSE 80
 
-RUN apt-get -q update && apt-get -qy install phpldapadmin
+RUN apt-get -qy install phpldapadmin
 
 COPY phpldapadmin/config.php /etc/phpldapadmin/
 RUN chgrp www-data /etc/phpldapadmin/config.php

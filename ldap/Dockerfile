@@ -5,7 +5,7 @@
 # Documentation:
 #  - https://help.ubuntu.com/12.04/serverguide/openldap-server.html
 
-FROM ubuntu:12.04
+FROM ci-base
 MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
 
 EXPOSE 389
@@ -20,7 +20,7 @@ RUN pass="admin" \
     ) | debconf-set-selections
 
 RUN export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true \
-    && apt-get -q update && apt-get -qy install ldap-utils slapd
+    && apt-get -qy install ldap-utils slapd
 
 # entrypoint script handles DB initialization
 COPY entrypoint.sh /entrypoint
