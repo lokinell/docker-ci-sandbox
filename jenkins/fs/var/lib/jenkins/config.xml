@@ -94,10 +94,7 @@
     <userSearch>uid={0}</userSearch>
     <groupSearchBase>ou=groups</groupSearchBase>
     <managerDN>cn=admin,dc=asf,dc=griddynamics,dc=com</managerDN>
-    <!-- FIXME: hardcoded base64-encoded password. To encode:
-         echo "password" | base64
-    -->
-    <managerPassword>YWRtaW4=</managerPassword>
+    <managerPassword>base64_encoded_password</managerPassword>
     <disableMailAddressResolver>false</disableMailAddressResolver>
   </securityRealm>
   <workspaceDir>/var/lib/jenkins-ws/${ITEM_FULLNAME}</workspaceDir>

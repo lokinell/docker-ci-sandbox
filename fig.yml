@@ -98,6 +98,7 @@ jenkins:
         - nexus:nexus
         - jenkinsSlave
     environment:
+        ldap_admin_password: admin
         http_proxy:
 
 
