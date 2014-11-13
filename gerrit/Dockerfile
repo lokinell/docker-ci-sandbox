@@ -46,30 +46,31 @@ RUN wget -q -O /tmp/gerrit.war "http://gerrit-releases.storage.googleapis.com/ge
     && rm /tmp/gerrit.war
 
 # Configure Gerrit
-RUN git config -f etc/gerrit.config gerrit.canonicalWebUrl http://localhost:8083/ \
+RUN git config -f etc/gerrit.config gerrit.canonicalWebUrl 'http://localhost:8083/' \
     && git config -f etc/gerrit.config auth.type LDAP \
-    && git config -f etc/gerrit.config ldap.server ldap://ldap \
+    && git config -f etc/gerrit.config ldap.server 'ldap://ldap' \
     && git config -f etc/gerrit.config ldap.accountBase 'ou=people,dc=asf,dc=griddynamics,dc=com' \
     && git config -f etc/gerrit.config ldap.accountPattern 'uid=${username}' \
-    && git config -f etc/gerrit.config ldap.accountFullName displayName \
-    && git config -f etc/gerrit.config ldap.accountEmailAddress mail \
-    && git config -f etc/gerrit.config ldap.groupBase "ou=groups,dc=asf,dc=griddynamics,dc=com" \
+    && git config -f etc/gerrit.config ldap.accountFullName 'displayName' \
+    && git config -f etc/gerrit.config ldap.accountEmailAddress 'mail' \
+    && git config -f etc/gerrit.config ldap.groupBase 'ou=groups,dc=asf,dc=griddynamics,dc=com' \
     && git config -f etc/gerrit.config ldap.groupMemberPattern '(|(member=${dn})(uniqueMember=${dn}))' \
     && git config -f etc/gerrit.config sendemail.smtpServer localhost \
-    && git config -f etc/gerrit.config sshd.listenAddress *:29418 \
-    && git config -f etc/gerrit.config httpd.listenUrl http://*:8080/ \
-    && git config -f etc/gerrit.config gitweb.cgi /usr/lib/cgi-bin/gitweb.cgi
+    && git config -f etc/gerrit.config sshd.listenAddress '*:29418' \
+    && git config -f etc/gerrit.config httpd.listenUrl 'http://*:8080/' \
+    && git config -f etc/gerrit.config gitweb.cgi '/usr/lib/cgi-bin/gitweb.cgi'
 
-# For Gerrit 2.9 (see https://gerrit-documentation.storage.googleapis.com/ReleaseNotes/ReleaseNotes-2.9.html#_important_notes)
-RUN java -jar bin/gerrit.war reindex -d . --recheck-mergeable
-
-# Bootstraping script & preserved Gerrit data for it
-ENV gerrit_save_dir /var/lib/gerrit/save
-RUN mkdir "$gerrit_save_dir" && cp -rl data db git "$gerrit_save_dir"
-COPY setup.sh /var/lib/gerrit/
+USER root
 
 # Link to Jenkins
-COPY ssh/jenkins_id_rsa.pub ssh/jenkinsslave_id_rsa.pub /var/lib/gerrit/save/
+COPY ssh/jenkins_id_rsa.pub ssh/jenkinsslave_id_rsa.pub /var/lib/gerrit/etc/
 
+# entrypoint script handles initialization
+COPY entrypoint.sh /entrypoint
+RUN chown gerrit /entrypoint && chmod 700 /entrypoint
+
+USER gerrit
+
+ENTRYPOINT ["/entrypoint"]
 CMD ["bin/gerrit.sh", "run"]
 

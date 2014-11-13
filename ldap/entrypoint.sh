@@ -1,38 +1,45 @@
 #!/bin/sh -e
 #
-# Initialize OpenLDAP data
+# Docker container ENTRYPOINT for ldap
+# It initializes the LDAP DB (1st time) and run CMD process.
 #
 
-# Expected environment variables
-echo "Test environment configuration..."
-[ $(id -u) -eq 0 ]
-echo "Succeeded"
+[ ! -f /run/lock/initialized ] || exec "$@"
 
-[ ! -f /var/lib/ldap/DB_CONFIG ] || exit 0
 
 # The following steps are for initial bootstrapping only
 
-bind_dn="cn=admin,dc=asf,dc=griddynamics,dc=com"
-bind_pass="admin"
+# LDAP administrator
+ldap_admin_dn="cn=admin,dc=asf,dc=griddynamics,dc=com"
 
-chown openldap /var/lib/ldap
+# Expected environment variables
+# to be passed from Docker command line or fig.yml:
+#
+echo "Test environment configuration..."
+[ "$ldap_admin_password" ]
+[ "$system_admin_password" ]
+[ "$jenkins_bot_password" ]
+echo "Succeeded"
 
-# Create LDAP database
-su openldap -s /bin/sh -c "slapadd -v -n 1" <<_DB_INIT
-dn: dc=asf,dc=griddynamics,dc=com
-objectClass: dcObject
-objectClass: organization
-o: ASF
-dc: asf
-_DB_INIT
+
+# Start LDAP daemon listening for local requests only
+# then feed it with LDAP data.
+#
+slapd -u openldap -h "ldapi:///" -F /etc/ldap/slapd.d
+
+# Set password LDAP administrator
+#
+ldapmodify -Q -Y EXTERNAL -H ldapi:/// <<_ADMIN_PASSWORD
+dn: olcDatabase={1}hdb,cn=config
+changetype: modify
+replace: olcRootPW
+olcRootPW: $(slappasswd -s "$ldap_admin_password")
+-
+_ADMIN_PASSWORD
 
 # Populate LDAP DB with basic entries.
 #
-# Start LDAP daemon listening for local requests only
-# then feed it with LDAP data.
-slapd -u openldap -h "ldapi:///" -F /etc/ldap/slapd.d
-
-ldapadd -H ldapi:/// -x -D "$bind_dn" -w "$bind_pass" <<_ENTITIES
+ldapadd -H ldapi:/// -x -D "$ldap_admin_dn" -w "$ldap_admin_password" <<_ENTITIES
 dn: ou=people,dc=asf,dc=griddynamics,dc=com
 objectclass: organizationalUnit
 ou: people
@@ -49,7 +56,7 @@ cn: Administrator
 sn: Administrator
 displayname: System Administrator
 uid: admin
-userpassword: $(slappasswd -s "admin")
+userpassword: $(slappasswd -s "$system_admin_password")
 
 # TODO: Not sure if Jenkins user has to be an inetOrgPerson in ou=people,
 # or not just simpleSecurityObject elsewhere to distinguish from real people.
@@ -58,7 +65,7 @@ objectclass: inetOrgPerson
 cn: Jenkins CI
 sn: Jenkins CI
 uid: jenkins-bot
-userpassword: $(slappasswd -s "jenkins")
+userpassword: $(slappasswd -s "$jenkins_bot_password")
 
 # System groups
 
@@ -80,4 +87,9 @@ _ENTITIES
 
 # Terminate temporary LDAP daemon, wait a bit to let it exit gracefully
 killall -w slapd
+
+
+# Proceed with CMD
+touch /run/lock/initialized
+exec "$@"
 

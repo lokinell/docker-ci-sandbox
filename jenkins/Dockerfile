@@ -67,11 +67,5 @@ ADD fs/var/lib/jenkins /var/lib/jenkins
 ADD ssh/ /var/lib/jenkins/.ssh
 RUN chown -R jenkins /var/lib/jenkins
 
-# 'setup' bootstraping script
-ENV jenkins_save_dir /var/lib/jenkins.save
-COPY setup.sh /bin/setup
-RUN chmod 755 /bin/setup
-RUN mkdir "$jenkins_save_dir" && cp -rl . "$jenkins_save_dir"
-
 CMD ["service", "jenkins", "start"]
 

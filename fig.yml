@@ -4,34 +4,28 @@
 # LDAP service
 #
 # To create and strart LDAP service container:
-#   $ fig up --no-recreate ldapinit
-#   $ fig rm ldapinit
 #   $ fig up -d ldap
 # To start web UI for it:
 #   $ fig up -d --no-recreate ldapadmin
 #
+# Parameters as environment variables:
+#   ldap_admin_pw - LDAP administrator password
+#
 
 ldap:
     build: ldap
-    hostname: dev-ldap
-    volumes_from:
-        - ldapvolume
-ldapinit:
-    build: ldap
-    user: root
-    command: sh -e ./setup.sh
-    volumes_from:
-        - ldapvolume
-    links:
-        - ldapvolume
-ldapvolume:
-    image: volume
+    hostname: ldap
     volumes:
         - /var/lib/ldap
+        - /run/lock
+    environment:
+        ldap_admin_password: admin
+        system_admin_password: admin
+        jenkins_bot_password: jenkins
 
 ldapadmin:
     build: ldap-admin
-    hostname: dev-ldap-admin
+    hostname: ldap-admin
     ports:
         - 127.0.0.1:8084:80
     links:
@@ -41,102 +35,63 @@ ldapadmin:
 # Gerrit service
 #
 # To create and strart Gerrit service container:
-#   $ fig up --no-recreate gerritinit
-#   $ fig rm gerritinit
 #   $ fig up -d gerrit
-#
-# To upgrade
-#   $ fig stop gerrit
-#   $ fig build gerrit
-#   $ fig build gerritinit
-# then follow the steps above to create and start Gerrit service container.
 #
 
 gerrit:
     build: gerrit
-    hostname: dev-gerrit
+    hostname: gerrit
     ports:
         - 127.0.0.1:8083:8080
         - 127.0.0.1:29418:29418
-    volumes_from:
-        - gerritvolume
-    links:
-        - ldap:ldap
-    environment:
-        http_proxy:
-
-gerritinit:
-    build: gerrit
-    user: root
-    command: sh -e ./setup.sh
-    volumes_from:
-        - gerritvolume
-    links:
-        - gerritvolume
-    environment:
-        http_proxy:
-
-gerritvolume:
-    image: volume
     volumes:
         - /var/lib/gerrit/data
         - /var/lib/gerrit/db
         - /var/lib/gerrit/git
+        - /run/lock
+    links:
+        - ldap:ldap
+    environment:
+        http_proxy:
 
 
 # Nexus service
 #
 # To create and strart Nexus service container:
-#   $ fig up nexusinit
-#   $ fig rm nexusinit
 #   $ fig up -d nexus
 #
 
 nexus:
     build: nexus
-    hostname: dev-nexus
+    hostname: nexus
     ports:
         - 127.0.0.1:8082:8081
-    volumes_from:
-        - nexusvolume
+    volumes:
+        - /var/lib/sonatype-work/nexus
+        - /run/lock
     links:
         - ldap:ldap
     environment:
+        ldap_admin_password: admin
         http_proxy:
-
-nexusinit:
-    build: nexus
-    user: root
-    command: sh -e ./setup.sh
-    volumes_from:
-        - nexusvolume
-    links:
-        - nexusvolume
-    environment:
-        http_proxy:
-
-nexusvolume:
-    image: volume
-    volumes:
-        - /var/lib/sonatype-work/nexus
 
 
 # Jenkins service
 #
 # To create and strart Jenkins service container:
-#   $ fig up jenkinsinit
-#   $ fig rm jenkinsinit
 #   $ fig up -d jenkins
 #
 
 jenkins:
     build: jenkins
-    hostname: dev-jenkins
+    hostname: jenkins
     ports:
         - 127.0.0.1:8081:8080
-    volumes_from:
-        - jenkinsconfig
-        - jenkinsdata
+    volumes:
+        - /var/lib/jenkins
+        - /var/lib/jenkins-builds
+        - /var/lib/jenkins-ws
+        - /run/lock
     links:
         - ldap:ldap
         - gerrit:gerrit
@@ -144,27 +99,6 @@ jenkins:
         - jenkinsslave
     environment:
         http_proxy:
-jenkinsinit:
-    build: jenkins
-    user: root
-    command: setup
-    volumes_from:
-        - jenkinsconfig
-        - jenkinsdata
-    links:
-        - jenkinsconfig
-        - jenkinsdata
-    environment:
-        http_proxy:
-jenkinsconfig:
-    image: volume
-    volumes:
-        - /var/lib/jenkins
-jenkinsdata:
-    image: volume
-    volumes:
-        - /var/lib/jenkins-builds
-        - /var/lib/jenkins-ws
 
 
 # Jenkins slave
