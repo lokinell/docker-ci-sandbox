@@ -67,5 +67,9 @@ ADD fs/var/lib/jenkins /var/lib/jenkins
 ADD ssh/ /var/lib/jenkins/.ssh
 RUN chown -R jenkins /var/lib/jenkins
 
+# entrypoint script handles initialization
+COPY entrypoint.sh /entrypoint
+RUN chown jenkins /entrypoint && chmod 700 /entrypoint
+
 CMD ["service", "jenkins", "start"]
 
