@@ -71,5 +71,6 @@ RUN chown -R jenkins /var/lib/jenkins
 COPY entrypoint.sh /entrypoint
 RUN chown jenkins /entrypoint && chmod 700 /entrypoint
 
+ENTRYPOINT ["/entrypoint"]
 CMD ["service", "jenkins", "start"]
 

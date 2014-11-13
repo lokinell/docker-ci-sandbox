@@ -63,7 +63,8 @@ RUN git config -f etc/gerrit.config gerrit.canonicalWebUrl 'http://localhost:808
 USER root
 
 # Link to Jenkins
-COPY ssh/jenkins_id_rsa.pub ssh/jenkinsslave_id_rsa.pub /var/lib/gerrit/etc/
+COPY ssh/jenkins_id_rsa.pub /var/lib/gerrit/etc/
+COPY ssh/jenkinsslave_id_rsa.pub /var/lib/gerrit/etc/
 
 # entrypoint script handles initialization
 COPY entrypoint.sh /entrypoint
