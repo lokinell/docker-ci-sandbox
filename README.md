@@ -26,7 +26,7 @@ Installation steps for Ubuntu/Debian.
 
 ### Docker
 
-[Docker](https://docker.com/) 1.0.0+ is required.
+[Docker](https://docker.com/) 1.3+ is required.
 See [installation manual](https://docs.docker.com/installation/).
 
 Configure Docker access without `sudo`:
