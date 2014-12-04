@@ -31,7 +31,7 @@ See [installation manual](https://docs.docker.com/installation/).
 
 Configure Docker access without `sudo`:
 
-    sudo groupad docker
+    sudo groupadd docker
     sudo gpasswd -a `id -un` docker
     sudo restart docker
 
