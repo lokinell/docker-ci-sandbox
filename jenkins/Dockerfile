@@ -58,6 +58,7 @@ RUN cd plugins && echo \
     ${plugin_site}/promoted-builds/2.18/promoted-builds.hpi \
     ${plugin_site}/copyartifact/1.31/copyartifact.hpi \
     ${plugin_site}/cloudbees-folder/4.6.1/cloudbees-folder.hpi \
+    ${plugin_site}/envinject/1.90/envinject.hpi \
     | xargs -t -n1 wget -q -N
 
 USER root
