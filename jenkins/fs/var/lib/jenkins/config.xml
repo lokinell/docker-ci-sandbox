@@ -167,6 +167,9 @@
         </tree-map>
       </envVars>
     </hudson.slaves.EnvironmentVariablesNodeProperty>
+    <org.jenkinsci.plugins.envinject.EnvInjectNodeProperty plugin="envinject@1.90">
+      <unsetSystemVariables>false</unsetSystemVariables>
+    </org.jenkinsci.plugins.envinject.EnvInjectNodeProperty>
   </globalNodeProperties>
   <noUsageStatistics>true</noUsageStatistics>
 </hudson>
