@@ -15,7 +15,7 @@ MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
 EXPOSE 8080
 EXPOSE 29418
 
-ENV gerrit_version 2.9
+ENV gerrit_version 2.9.1
 ENV TMP /tmp
 
 RUN apt-get -qy install openssh-client git gitweb
