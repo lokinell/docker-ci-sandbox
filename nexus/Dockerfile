@@ -14,7 +14,7 @@ MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
 
 EXPOSE 8081
 
-ENV nexus_version 2.9.1
+ENV nexus_version 2.10.0-02
 ENV TMP /tmp
 
 # Nexus user
