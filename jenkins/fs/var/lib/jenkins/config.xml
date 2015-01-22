@@ -1,6 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <hudson>
-  <version>1.565.2</version>
+  <disabledAdministrativeMonitors>
+    <string>jenkins.security.s2m.MasterKillSwitchWarning</string>
+  </disabledAdministrativeMonitors>
+  <version>1.580.2</version>
   <numExecutors>2</numExecutors>
   <mode>EXCLUSIVE</mode>
   <useSecurity>true</useSecurity>
@@ -87,9 +90,10 @@
     <permission>hudson.scm.SCM.Tag:robots</permission>
     <permission>hudson.scm.SCM.Tag:users</permission>
   </authorizationStrategy>
-  <securityRealm class="hudson.security.LDAPSecurityRealm">
+  <securityRealm class="hudson.security.LDAPSecurityRealm" plugin="ldap@1.6">
     <server>ldap</server>
     <rootDN>dc=asf,dc=griddynamics,dc=com</rootDN>
+    <inhibitInferRootDN>false</inhibitInferRootDN>
     <userSearchBase>ou=people</userSearchBase>
     <userSearch>uid={0}</userSearch>
     <groupSearchBase>ou=groups</groupSearchBase>
@@ -134,12 +138,11 @@
   <slaves>
     <slave>
       <name>slave1</name>
-      <description></description>
       <remoteFS>/var/lib/jenkins-slave</remoteFS>
       <numExecutors>2</numExecutors>
       <mode>NORMAL</mode>
       <retentionStrategy class="hudson.slaves.RetentionStrategy$Always"/>
-      <launcher class="hudson.plugins.sshslaves.SSHLauncher" plugin="ssh-slaves@1.5">
+      <launcher class="hudson.plugins.sshslaves.SSHLauncher" plugin="ssh-slaves@1.8">
         <host>jenkinsSlave_1</host>
         <port>22</port>
         <credentialsId>a055e4f5-43b7-4d5f-a222-1c1d703fa730</credentialsId>

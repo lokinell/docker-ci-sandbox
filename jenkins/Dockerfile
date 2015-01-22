@@ -14,7 +14,7 @@ MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
 
 EXPOSE 8080
 
-ENV jenkins_version 1.565.2
+ENV jenkins_version 1.580.2
 ENV TMP /tmp
 
 # Install Jenkins
@@ -41,23 +41,24 @@ RUN mkdir plugins && cd plugins \
 #
 # Install plugins
 #
-# 1.565.2 as of 2014-09-13
+# 1.580.2 as of 2015-01-12
 ENV plugin_site http://updates.jenkins-ci.org/download/plugins
 RUN cd plugins && echo \
-    ${plugin_site}/mock-security-realm/1.1/mock-security-realm.hpi \
-    ${plugin_site}/git-client/1.10.2/git-client.hpi \
+    ${plugin_site}/mock-security-realm/1.2/mock-security-realm.hpi \
+    ${plugin_site}/git-client/1.15.0/git-client.hpi \
     ${plugin_site}/scm-api/0.2/scm-api.hpi \
-    ${plugin_site}/git/2.2.6/git.hpi \
+    ${plugin_site}/git/2.3.4/git.hpi \
     ${plugin_site}/ssh-agent/1.5/ssh-agent.hpi \
     ${plugin_site}/gerrit-trigger/2.11.1/gerrit-trigger.hpi \
     ${plugin_site}/token-macro/1.10/token-macro.hpi \
-    ${plugin_site}/groovy/1.21/groovy.hpi \
-    ${plugin_site}/email-ext/2.38.2/email-ext.hpi \
+    ${plugin_site}/groovy/1.24/groovy.hpi \
+    ${plugin_site}/script-security/1.12/script-security.hpi \
+    ${plugin_site}/email-ext/2.39/email-ext.hpi \
     ${plugin_site}/config-file-provider/2.7.5/config-file-provider.hpi \
     ${plugin_site}/parameterized-trigger/2.25/parameterized-trigger.hpi \
-    ${plugin_site}/promoted-builds/2.18/promoted-builds.hpi \
-    ${plugin_site}/copyartifact/1.31/copyartifact.hpi \
-    ${plugin_site}/cloudbees-folder/4.6.1/cloudbees-folder.hpi \
+    ${plugin_site}/promoted-builds/2.19/promoted-builds.hpi \
+    ${plugin_site}/copyartifact/1.32.1/copyartifact.hpi \
+    ${plugin_site}/cloudbees-folder/4.7/cloudbees-folder.hpi \
     ${plugin_site}/envinject/1.90/envinject.hpi \
     | xargs -t -n1 wget -q -N
 

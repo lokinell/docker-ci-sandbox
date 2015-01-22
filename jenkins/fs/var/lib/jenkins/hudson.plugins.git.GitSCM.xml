@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<hudson.plugins.git.GitSCM_-DescriptorImpl>
+<hudson.plugins.git.GitSCM_-DescriptorImpl plugin="git@2.3.1">
   <globalConfigName>Jenkins CI</globalConfigName>
   <globalConfigEmail>jenkins@sandbox</globalConfigEmail>
 </hudson.plugins.git.GitSCM_-DescriptorImpl>

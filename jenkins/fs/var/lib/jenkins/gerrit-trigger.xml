@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<com.sonyericsson.hudson.plugins.gerrit.trigger.PluginImpl>
+<com.sonyericsson.hudson.plugins.gerrit.trigger.PluginImpl plugin="gerrit-trigger@2.12.0">
   <servers>
     <com.sonyericsson.hudson.plugins.gerrit.trigger.GerritServer>
       <name>gerrit</name>
@@ -11,6 +11,8 @@
         <gerritEMail>jenkins-bot@cisandbox.asf.griddynamics.com</gerritEMail>
         <gerritAuthKeyFile>/var/lib/jenkins/.ssh/id_rsa</gerritAuthKeyFile>
         <useRestApi>false</useRestApi>
+        <restCodeReview>false</restCodeReview>
+        <restVerified>false</restVerified>
         <gerritBuildCurrentPatchesOnly>true</gerritBuildCurrentPatchesOnly>
         <gerritVerifiedCmdBuildSuccessful>gerrit review &lt;CHANGE&gt;,&lt;PATCHSET&gt; --message &apos;Build Successful &lt;BUILDS_STATS&gt;&apos; --verified &lt;VERIFIED&gt; --code-review &lt;CODE_REVIEW&gt;</gerritVerifiedCmdBuildSuccessful>
         <gerritVerifiedCmdBuildUnstable>gerrit review &lt;CHANGE&gt;,&lt;PATCHSET&gt; --message &apos;Build Unstable &lt;BUILDS_STATS&gt;&apos; --verified &lt;VERIFIED&gt; --code-review &lt;CODE_REVIEW&gt;</gerritVerifiedCmdBuildUnstable>
