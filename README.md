@@ -11,9 +11,9 @@ The services are configured to work together.
 Containers run on a single machine and orchestrated by Fig.
 Services listen on localhost (127.0.0.1) address and not visible from outside.
 
-It works on recent Linux distributions supported by Docker, e.g.
-Ubuntu - 12.04 and up.
-MacOS requires some tweaks with network configuration.
+It works on recent Linux distributions supported by Docker (e.g. Ubuntu 12.04
+and up)
+and MacOS (with [Boot2Docker](https://github.com/boot2docker/boot2docker)).
 
 The whole setup is kept as simple as possible with minimum tools involved
 and minimum changes made to stock configurations.
@@ -22,12 +22,19 @@ and minimum changes made to stock configurations.
 Install prerequisites
 ----------------------
 
-Installation steps for Ubuntu/Debian.
+ - [Docker](https://docker.com/) 1.3 and newer.
+ - [Fig](http://www.fig.sh/) ("Make" for Docker) 1.0 and newer.
+ - GNU Make.
 
-### Docker
+### Installation steps for Ubuntu/Debian
 
-[Docker](https://docker.com/) 1.3+ is required.
-See [installation manual](https://docs.docker.com/installation/).
+Docker - see [installation manual](https://docs.docker.com/installation/ubuntulinux/).
+
+Fig - see [installation manual](http://www.fig.sh/install.html).
+
+GNU make:
+
+    sudo apt-get install make
 
 Configure Docker access without `sudo`:
 
@@ -35,16 +42,27 @@ Configure Docker access without `sudo`:
     sudo gpasswd -a `id -un` docker
     sudo restart docker
 
-Relogin to get 'docker' group membership.
+Relogin to get "docker" group membership.
 
-### Fig
+### Installation steps for Mac
 
-[Fig](http://www.fig.sh/) - Make for Docker.
-See [installation manual](http://www.fig.sh/install.html).
+Docker - see [installation manual](https://docs.docker.com/installation/mac/).
 
-### GNU make
+Fig - see [installation manual](http://www.fig.sh/install.html).
 
-    sudo apt-get install make
+GNU make (assuming [Homebew](http://brew.sh/) and GNU utils are installed):
+
+    brew install make
+
+Forward TCP ports for contailers from boot2docker VM to the host system
+(password - `tcuser`):
+
+    ssh -L 127.0.0.1:8081:127.0.0.1:8081 \
+        -L 127.0.0.1:8082:127.0.0.1:8082 \
+        -L 127.0.0.1:8083:127.0.0.1:8083 \
+        -L 127.0.0.1:8084:127.0.0.1:8084 \
+        -L 127.0.0.1:29418:127.0.0.1:29418 \
+        -fN docker@`boot2docker ip`
 
 
 Build base images
