@@ -82,6 +82,9 @@ cat >conf/security.xml <<_SECURITY_XML
       <id>robots</id>
       <name>robots</name>
       <description>External mapping for users (LDAP)</description>
+      <privileges>
+        <privilege>65</privilege>
+      </privileges>
       <roles>
         <role>nx-deployment</role>
         <role>repository-any-full</role>

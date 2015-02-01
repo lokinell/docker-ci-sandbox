@@ -16,9 +16,6 @@ MAVEN_FILEPATH=maven/maven-3/$(MAVEN_VERSION)/binaries/$(MAVEN_FILE)
 GROOVY_VERSION=2.3.6
 GROOVY_FILE=groovy-binary-$(GROOVY_VERSION).zip
 
-# Maven CLI to upload to Nexus
-MVN=mvn -B
-
 # Nexus as it visible from host system
 NEXUS_URL=http://localhost:8082/nexus
 NEXUS_REPOSITORY=thirdparty
@@ -33,42 +30,46 @@ NEXUS_PASSWORD=jenkins
 upload-tools: upload-jdk upload-maven upload-groovy
 
 upload-jdk: upload-jdk7
-upload-jdk7: upload/$(JDK7_FILE) upload/settings.xml
-	curl -sf "$(NEXUS_URL)/service/local/artifact/maven/resolve?r=thirdparty&g=com.oracle.java&a=jdk&v=$(JDK7_VERSION)&c=linux-x64&e=tar.gz" >/dev/null \
-	|| $(MVN) -s upload/settings.xml deploy:deploy-file -Dfile=$< \
-	-Durl=$(NEXUS_URL)/content/repositories/$(NEXUS_REPOSITORY) \
-	-DrepositoryId=$(NEXUS_REPOSITORY) \
-	-DgroupId=com.oracle.java \
-	-DartifactId=jdk \
-	-Dversion=$(JDK7_VERSION) \
-	-Dclassifier=linux-x64 \
-	-Dpackaging=tar.gz
+upload-jdk7: upload/$(JDK7_FILE)
+	curl -sf "$(NEXUS_URL)/service/local/artifact/maven/resolve?r=$(NEXUS_REPOSITORY)&g=com.oracle.java&a=jdk&v=$(JDK7_VERSION)&c=linux-x64&e=tar.gz" >/dev/null \
+	|| curl -sSf -u "$(NEXUS_USER):$(NEXUS_PASSWORD)" \
+	-F hasPom=false \
+	-F r=$(NEXUS_REPOSITORY) \
+	-F g=com.oracle.java \
+	-F a=jdk \
+	-F v=$(JDK7_VERSION) \
+	-F c=linux-x64 \
+	-F e=tar.gz \
+	-F p=pom \
+	-F file=@$< \
+	$(NEXUS_URL)/service/local/artifact/maven/content >/dev/null
 
-upload-maven: upload/$(MAVEN_FILE) upload/settings.xml
-	curl -sf "$(NEXUS_URL)/service/local/artifact/maven/resolve?r=thirdparty&g=org.apache.maven&a=apache-maven&v=$(MAVEN_VERSION)&c=bin&e=zip" >/dev/null \
-	|| $(MVN) -s upload/settings.xml deploy:deploy-file -Dfile=$< \
-	-Durl=$(NEXUS_URL)/content/repositories/$(NEXUS_REPOSITORY) \
-	-DrepositoryId=$(NEXUS_REPOSITORY) \
-	-DgroupId=org.apache.maven \
-	-DartifactId=apache-maven \
-	-Dversion=$(MAVEN_VERSION) \
-	-Dclassifier=bin \
-	-Dpackaging=zip
+upload-maven: upload/$(MAVEN_FILE)
+	curl -sf "$(NEXUS_URL)/service/local/artifact/maven/resolve?r=$(NEXUS_REPOSITORY)&g=org.apache.maven&a=apache-maven&v=$(MAVEN_VERSION)&c=bin&e=zip" >/dev/null \
+	|| curl -sSf -u "$(NEXUS_USER):$(NEXUS_PASSWORD)" \
+	-F hasPom=false \
+	-F r=$(NEXUS_REPOSITORY) \
+	-F g=org.apache.maven \
+	-F a=apache-maven \
+	-F v=$(MAVEN_VERSION) \
+	-F c=bin \
+	-F e=zip \
+	-F p=pom \
+	-F file=@$< \
+	$(NEXUS_URL)/service/local/artifact/maven/content >/dev/null
 
-upload-groovy: upload/$(GROOVY_FILE) upload/settings.xml
-	curl -sf "$(NEXUS_URL)/service/local/artifact/maven/resolve?r=thirdparty&g=org.codehaus.groovy&a=groovy-binary&v=$(GROOVY_VERSION)&e=zip" >/dev/null \
-	|| $(MVN) -s upload/settings.xml deploy:deploy-file -Dfile=$< \
-	-Durl=$(NEXUS_URL)/content/repositories/$(NEXUS_REPOSITORY) \
-	-DrepositoryId=$(NEXUS_REPOSITORY) \
-	-DgroupId=org.codehaus.groovy \
-	-DartifactId=groovy-binary \
-	-Dversion=$(GROOVY_VERSION) \
-	-Dpackaging=zip
-
-upload/settings.xml: settings.xml.in
-	touch $@
-	chmod 600 $@
-	sed "s/%repositoryId%/$(NEXUS_REPOSITORY)/;s/%username%/$(NEXUS_USER)/;s/%password%/$(NEXUS_PASSWORD)/" <$< >$@
+upload-groovy: upload/$(GROOVY_FILE)
+	curl -sf "$(NEXUS_URL)/service/local/artifact/maven/resolve?r=$(NEXUS_REPOSITORY)&g=org.codehaus.groovy&a=groovy-binary&v=$(GROOVY_VERSION)&e=zip" >/dev/null \
+	|| curl -sSf -u "$(NEXUS_USER):$(NEXUS_PASSWORD)" \
+	-F hasPom=false \
+	-F r=$(NEXUS_REPOSITORY) \
+	-F g=org.codehaus.groovy \
+	-F a=groovy-binary \
+	-F v=$(GROOVY_VERSION) \
+	-F e=zip \
+	-F p=pom \
+	-F file=@$< \
+	$(NEXUS_URL)/service/local/artifact/maven/content >/dev/null
 
 #
 # Get files to upload
@@ -97,5 +98,4 @@ upload/$(GROOVY_FILE):
 clean:
 	rm -f upload/$(MAVEN_FILE)
 	rm -f upload/$(GROOVY_FILE)
-	rm -f upload/settings.xml
 
