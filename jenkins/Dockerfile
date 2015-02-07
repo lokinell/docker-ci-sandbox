@@ -49,7 +49,7 @@ RUN cd plugins && echo \
     ${plugin_site}/scm-api/0.2/scm-api.hpi \
     ${plugin_site}/git/2.3.4/git.hpi \
     ${plugin_site}/ssh-agent/1.5/ssh-agent.hpi \
-    ${plugin_site}/gerrit-trigger/2.11.1/gerrit-trigger.hpi \
+    ${plugin_site}/gerrit-trigger/2.12.0/gerrit-trigger.hpi \
     ${plugin_site}/token-macro/1.10/token-macro.hpi \
     ${plugin_site}/groovy/1.24/groovy.hpi \
     ${plugin_site}/script-security/1.12/script-security.hpi \
