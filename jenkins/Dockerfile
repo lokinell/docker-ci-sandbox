@@ -12,8 +12,6 @@
 FROM ci-base
 MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
 
-EXPOSE 8080
-
 ENV jenkins_version 1.580.2
 ENV TMP /tmp
 
@@ -22,8 +20,9 @@ RUN apt-get -qy install daemon psmisc
 RUN wget -q -O /tmp/jenkins.deb "http://pkg.jenkins-ci.org/debian-stable/binary/jenkins_${jenkins_version}_all.deb" \
     && dpkg -i /tmp/jenkins.deb && rm /tmp/jenkins.deb
 
-# Hack to run Jenkins in foreground
-RUN echo 'JENKINS_HOME="/var/lib/jenkins -f"' >>/etc/default/jenkins
+# Enable remote JMX and hack to run Jenkins in foreground
+RUN echo 'JAVA_ARGS="$JAVA_ARGS -Dcom.sun.management.jmxremote.port=8099 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false"' >>/etc/default/jenkins \
+    && echo 'JENKINS_HOME="/var/lib/jenkins -f"' >>/etc/default/jenkins
 
 # Directories for build records and workspaces
 RUN mkdir /var/lib/jenkins-builds && chown jenkins /var/lib/jenkins-builds
@@ -72,6 +71,8 @@ RUN chown -R jenkins /var/lib/jenkins
 # entrypoint script handles initialization
 COPY entrypoint.sh /entrypoint
 RUN chown jenkins /entrypoint && chmod 700 /entrypoint
+
+EXPOSE 8080 8099
 
 ENTRYPOINT ["/entrypoint"]
 CMD ["service", "jenkins", "start"]
