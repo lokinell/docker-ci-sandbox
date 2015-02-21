@@ -12,9 +12,6 @@
 FROM ci-base
 MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
 
-EXPOSE 8080
-EXPOSE 29418
-
 ENV gerrit_version 2.9.1
 ENV TMP /tmp
 
@@ -45,8 +42,10 @@ RUN wget -q -O /tmp/gerrit.war "http://gerrit-releases.storage.googleapis.com/ge
         --install-plugin download-commands --install-plugin reviewnotes --install-plugin replication \
     && rm /tmp/gerrit.war
 
-# Configure Gerrit
+# Configure Gerrit:
+# setup remote JMX access, LDAP authentication and GitWeb.
 RUN git config -f etc/gerrit.config gerrit.canonicalWebUrl 'http://localhost:8083/' \
+    && git config -f etc/gerrit.config container.javaOptions '-Dcom.sun.management.jmxremote.port=8099 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false' \
     && git config -f etc/gerrit.config auth.type LDAP \
     && git config -f etc/gerrit.config ldap.server 'ldap://ldap' \
     && git config -f etc/gerrit.config ldap.accountBase 'ou=people,dc=asf,dc=griddynamics,dc=com' \
@@ -71,6 +70,11 @@ COPY entrypoint.sh /entrypoint
 RUN chown gerrit /entrypoint && chmod 700 /entrypoint
 
 USER gerrit
+
+# Application ports
+EXPOSE 8080 29418
+# JMX RMI port
+EXPOSE 8099
 
 ENTRYPOINT ["/entrypoint"]
 CMD ["bin/gerrit.sh", "run"]
