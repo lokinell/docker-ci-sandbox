@@ -12,8 +12,6 @@
 FROM ci-base
 MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
 
-EXPOSE 8081
-
 ENV nexus_version 2.10.0-02
 ENV TMP /tmp
 
@@ -55,6 +53,11 @@ COPY entrypoint.sh /entrypoint
 RUN chown nexus /entrypoint && chmod 700 /entrypoint
 
 USER nexus
+
+# Application ports
+EXPOSE 8081
+# JMX RMI port
+EXPOSE 8099
 
 ENTRYPOINT ["/entrypoint"]
 CMD ["bin/nexus", "start"]
