@@ -34,9 +34,14 @@ WORKDIR /var/lib/nexus
 
 # Adjust Nexus startup script
 RUN sed -e 's:^#*\(RUN_AS_USER\)=.*:\1=nexus:' \
-    -e 's:^#*\(PIDDIR\)=.*:\1=/var/run/nexus:' \
-    -e 's:\<\(wrapper.daemonize\)=[^ ]\+:\1=FALSE:' \
-    -i bin/nexus
+        -e 's:^#*\(PIDDIR\)=.*:\1=/var/run/nexus:' \
+        -e 's:\<\(wrapper.daemonize\)=[^ ]\+:\1=FALSE:' \
+        -i bin/nexus \
+    && sed -e '$a wrapper.java.additional.4=-Dcom.sun.management.jmxremote.port=8099' \
+        -e '$a wrapper.java.additional.5=-Dcom.sun.management.jmxremote.authenticate=false' \
+        -e '$a wrapper.java.additional.6=-Dcom.sun.management.jmxremote.ssl=false' \
+        -i bin/jsw/conf/wrapper.conf
+     
 
 # Runtime data dir
 RUN mkdir /var/run/nexus && chown nexus:root /var/run/nexus
