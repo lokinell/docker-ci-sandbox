@@ -12,7 +12,7 @@
 FROM ci-base
 MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
 
-ENV gerrit_version 2.9.1
+ENV gerrit_version 2.10
 ENV TMP /tmp
 
 RUN apt-get -qy install openssh-client git gitweb

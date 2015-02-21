@@ -25,9 +25,13 @@ echo "Succeeded"
 # Run upgrade actions if a marker file does not exist in container filesystem
 #
 if [ ! -f etc/upgraded ]; then
-    # Gerrit 2.9 (see https://gerrit-documentation.storage.googleapis.com/ReleaseNotes/ReleaseNotes-2.9.html#_important_notes)
+    # Gerrit 2.9, 2.10 (https://gerrit-documentation.storage.googleapis.com/ReleaseNotes/ReleaseNotes-2.10.html#_important_notes)
     java -jar bin/gerrit.war init -d .
+    # Gerrit 2.9 (see https://gerrit-documentation.storage.googleapis.com/ReleaseNotes/ReleaseNotes-2.9.html#_important_notes)
     java -jar bin/gerrit.war reindex -d . --recheck-mergeable
+    # Drop unused objects (upgrade to 2.10)
+    echo "ALTER TABLE accounts DROP COLUMN show_user_in_review;" \
+        | java -jar bin/gerrit.war gsql
     touch etc/upgraded
 fi
 
