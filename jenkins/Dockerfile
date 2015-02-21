@@ -72,7 +72,10 @@ RUN chown -R jenkins /var/lib/jenkins
 COPY entrypoint.sh /entrypoint
 RUN chown jenkins /entrypoint && chmod 700 /entrypoint
 
-EXPOSE 8080 8099
+# Application ports
+EXPOSE 8080
+# JMX RMI port
+EXPOSE 8099
 
 ENTRYPOINT ["/entrypoint"]
 CMD ["service", "jenkins", "start"]
