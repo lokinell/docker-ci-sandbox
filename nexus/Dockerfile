@@ -12,7 +12,7 @@
 FROM ci-base
 MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
 
-ENV nexus_version 2.10.0-02
+ENV nexus_version 2.11.2-03
 ENV TMP /tmp
 
 # Nexus user
