@@ -57,7 +57,9 @@ RUN git config -f etc/gerrit.config gerrit.canonicalWebUrl 'http://localhost:808
     && git config -f etc/gerrit.config sendemail.smtpServer localhost \
     && git config -f etc/gerrit.config sshd.listenAddress '*:29418' \
     && git config -f etc/gerrit.config httpd.listenUrl 'http://*:8080/' \
-    && git config -f etc/gerrit.config gitweb.cgi '/usr/lib/cgi-bin/gitweb.cgi'
+    && git config -f etc/gerrit.config gitweb.cgi '/usr/lib/cgi-bin/gitweb.cgi' \
+    && git config -f etc/gerrit.config gc.startTime 'Sat 23:30' \
+    && git config -f etc/gerrit.config gc.interval '1 week'
 
 USER root
 
