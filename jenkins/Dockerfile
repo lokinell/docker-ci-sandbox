@@ -20,8 +20,11 @@ RUN apt-get -qy install daemon psmisc
 RUN wget -q -O /tmp/jenkins.deb "http://pkg.jenkins-ci.org/debian-stable/binary/jenkins_${jenkins_version}_all.deb" \
     && dpkg -i /tmp/jenkins.deb && rm /tmp/jenkins.deb
 
-# Enable remote JMX and hack to run Jenkins in foreground
+# - Enable remote JMX.
+# - Enable Extended read permission.
+# - Hack to run Jenkins in foreground.
 RUN echo 'JAVA_ARGS="$JAVA_ARGS -Dcom.sun.management.jmxremote.port=8099 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false"' >>/etc/default/jenkins \
+    && echo 'JAVA_ARGS="$JAVA_ARGS -Dhudson.security.ExtendedReadPermission=true"' >>/etc/default/jenkins \
     && echo 'JENKINS_HOME="/var/lib/jenkins -f"' >>/etc/default/jenkins
 
 # Directories for build records and workspaces
