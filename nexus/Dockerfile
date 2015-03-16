@@ -12,7 +12,8 @@
 FROM ci-base
 MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
 
-ENV nexus_version 2.10.0-02
+ENV nexus_version 2.11.2-06
+ENV nexus_sha1 6f89cdef30029aae02c9c64397a6e0b92d6c34c1
 ENV TMP /tmp
 
 # Nexus user
@@ -21,8 +22,7 @@ RUN useradd -c 'Nexus repository server' -d /var/lib/nexus -M -N -g nogroup -r n
 # Download and install Nexus
 RUN cd /var/lib \
     && wget -q -O /tmp/nexus-bundle.tar.gz http://www.sonatype.org/downloads/nexus-${nexus_version}-bundle.tar.gz \
-    && checksum=$(wget -q -O- http://www.sonatype.org/downloads/nexus-${nexus_version}-bundle.tar.gz.sha1) \
-    && [ $(sha1sum /tmp/nexus-bundle.tar.gz | cut -f1 -d' ') = $checksum ] \
+    && [ $(sha1sum /tmp/nexus-bundle.tar.gz | cut -f1 -d' ') = $nexus_sha1 ] \
     && tar -xzf /tmp/nexus-bundle.tar.gz \
     && ln -s nexus-${nexus_version}* nexus \
     && chown -R nexus sonatype-work/nexus \
