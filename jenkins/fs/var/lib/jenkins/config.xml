@@ -2,8 +2,9 @@
 <hudson>
   <disabledAdministrativeMonitors>
     <string>jenkins.security.s2m.MasterKillSwitchWarning</string>
+    <string>jenkins.model.DownloadSettings$Warning</string>
   </disabledAdministrativeMonitors>
-  <version>1.580.2</version>
+  <version>1.596.2</version>
   <numExecutors>2</numExecutors>
   <mode>EXCLUSIVE</mode>
   <useSecurity>true</useSecurity>
@@ -103,6 +104,9 @@
   </securityRealm>
   <workspaceDir>/var/lib/jenkins-ws/${ITEM_FULLNAME}</workspaceDir>
   <buildsDir>/var/lib/jenkins-builds/${ITEM_FULLNAME}</buildsDir>
+  <markupFormatter class="hudson.markup.RawHtmlMarkupFormatter" plugin="antisamy-markup-formatter@1.1">
+    <disableSyntaxHighlighting>false</disableSyntaxHighlighting>
+  </markupFormatter>
   <jdks>
     <jdk>
       <name>jdk-default</name>
@@ -142,7 +146,7 @@
       <numExecutors>2</numExecutors>
       <mode>NORMAL</mode>
       <retentionStrategy class="hudson.slaves.RetentionStrategy$Always"/>
-      <launcher class="hudson.plugins.sshslaves.SSHLauncher" plugin="ssh-slaves@1.8">
+      <launcher class="hudson.plugins.sshslaves.SSHLauncher" plugin="ssh-slaves@1.9">
         <host>jenkinsSlave_1</host>
         <port>22</port>
         <credentialsId>a055e4f5-43b7-4d5f-a222-1c1d703fa730</credentialsId>

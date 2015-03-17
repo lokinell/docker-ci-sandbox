@@ -12,7 +12,7 @@
 FROM ci-base
 MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
 
-ENV jenkins_version 1.580.2
+ENV jenkins_version 1.596.2
 ENV TMP /tmp
 
 # Install Jenkins
@@ -43,25 +43,25 @@ RUN mkdir plugins && cd plugins \
 #
 # Install plugins
 #
-# 1.580.2 as of 2015-01-12
+# 1.596.2 as of 2015-04-03
 ENV plugin_site http://updates.jenkins-ci.org/download/plugins
 RUN cd plugins && echo \
     ${plugin_site}/mock-security-realm/1.2/mock-security-realm.hpi \
-    ${plugin_site}/git-client/1.15.0/git-client.hpi \
+    ${plugin_site}/git-client/1.16.1/git-client.hpi \
     ${plugin_site}/scm-api/0.2/scm-api.hpi \
-    ${plugin_site}/git/2.3.4/git.hpi \
+    ${plugin_site}/git/2.3.5/git.hpi \
     ${plugin_site}/ssh-agent/1.5/ssh-agent.hpi \
     ${plugin_site}/gerrit-trigger/2.12.0/gerrit-trigger.hpi \
     ${plugin_site}/token-macro/1.10/token-macro.hpi \
     ${plugin_site}/groovy/1.24/groovy.hpi \
     ${plugin_site}/script-security/1.12/script-security.hpi \
-    ${plugin_site}/email-ext/2.39/email-ext.hpi \
+    ${plugin_site}/email-ext/2.39.3/email-ext.hpi \
     ${plugin_site}/config-file-provider/2.7.5/config-file-provider.hpi \
-    ${plugin_site}/parameterized-trigger/2.25/parameterized-trigger.hpi \
-    ${plugin_site}/promoted-builds/2.19/promoted-builds.hpi \
-    ${plugin_site}/copyartifact/1.32.1/copyartifact.hpi \
+    ${plugin_site}/parameterized-trigger/2.26/parameterized-trigger.hpi \
+    ${plugin_site}/promoted-builds/2.20/promoted-builds.hpi \
+    ${plugin_site}/copyartifact/1.35/copyartifact.hpi \
     ${plugin_site}/cloudbees-folder/4.7/cloudbees-folder.hpi \
-    ${plugin_site}/envinject/1.90/envinject.hpi \
+    ${plugin_site}/envinject/1.91.1/envinject.hpi \
     | xargs -t -n1 wget -q -N
 
 USER root
