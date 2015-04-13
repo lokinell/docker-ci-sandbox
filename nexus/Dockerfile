@@ -9,7 +9,7 @@
 # docker run -d -p 127.0.0.1:8082:8081 -h nexus --name nexus nexus
 #
 
-FROM ci-base
+FROM ci-base:ubuntu
 MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
 
 ENV nexus_version 2.11.2-06

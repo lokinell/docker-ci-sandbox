@@ -9,7 +9,7 @@
 # sudo docker run -d -p 127.0.0.1:8083:8080 -p 127.0.0.1:29418:29418 -h gerrit --name gerrit gerrit 
 #
 
-FROM ci-base
+FROM ci-base:ubuntu
 MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
 
 ENV gerrit_version 2.10

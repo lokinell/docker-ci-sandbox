@@ -5,7 +5,7 @@
 # Documentation:
 #  - https://help.ubuntu.com/12.04/serverguide/openldap-server.html
 
-FROM ci-base
+FROM ci-base:ubuntu
 MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
 
 EXPOSE 389

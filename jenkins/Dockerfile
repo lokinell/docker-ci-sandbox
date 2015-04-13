@@ -9,7 +9,7 @@
 #   --link dev-nexus:nexus --link dev-gerrit:gerrit jenkins
 #
 
-FROM ci-base
+FROM ci-base:ubuntu
 MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
 
 ENV jenkins_version 1.596.2

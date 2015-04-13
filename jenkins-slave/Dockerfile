@@ -9,7 +9,7 @@
 # docker run -d -h jenkins-slave1 --name jenkins-slave1 jenkins-slave
 #
 
-FROM ci-base
+FROM ci-base:ubuntu
 MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
 
 EXPOSE 22

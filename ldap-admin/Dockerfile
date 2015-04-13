@@ -5,7 +5,7 @@
 # Documentation:
 #  - https://help.ubuntu.com/community/InstallingphpLDAPadmin
 
-FROM ci-base
+FROM ci-base:ubuntu
 MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
 
 EXPOSE 80
