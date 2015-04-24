@@ -5,27 +5,20 @@
 # Documentation:
 #  - https://help.ubuntu.com/12.04/serverguide/openldap-server.html
 
-FROM ci-base:ubuntu
+FROM ci-base:centos
 MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
 
 EXPOSE 389
 
-# Pre-set configuration parameters for OpenLDAP server (slapd)
-RUN pass="admin" \
-    && ( \
-        echo "slapd	slapd/domain	string	asf.griddynamics.com"; \
-        echo "slapd	shared/organization	string	ASF"; \
-        echo "slapd	slapd/password1	password	$pass"; \
-        echo "slapd	slapd/password2	password	$pass"; \
-    ) | debconf-set-selections
-
-RUN export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true \
-    && apt-get -qy install ldap-utils slapd
+RUN yum -y install openldap-clients openldap-servers
 
 # entrypoint script handles DB initialization
 COPY entrypoint.sh /entrypoint
 RUN chmod 700 /entrypoint
 
+# LDAP configuration parameters
+ENV organization ASF
+
 ENTRYPOINT ["/entrypoint"]
-CMD ["slapd", "-u", "openldap", "-h", "ldap:/// ldapi:///", "-F", "/etc/ldap/slapd.d", "-d", "Stats"]
+CMD ["slapd", "-u", "ldap", "-h", "ldap:/// ldapi:///", "-F", "/etc/openldap/slapd.d", "-d", "Stats"]
 

@@ -16,9 +16,11 @@ ldap:
     build: ldap
     hostname: ldap
     volumes:
+        - /etc/openldap/slapd.d
         - /var/lib/ldap
-        - /run/lock
+        - /var/lock
     environment:
+        domain: asf.griddynamics.com
         ldap_admin_password: admin
         system_admin_password: admin
         jenkins_bot_password: jenkins
