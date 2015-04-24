@@ -13,7 +13,8 @@ prepare: images keys
 keys: jenkins/keys jenkins-slave/keys gerrit/keys
 
 images:
-	docker build -t ci-base:ubuntu ci-base
+	cd ci-base && docker build -f Dockerfile-ubuntu -t ci-base:ubuntu .
+	cd ci-base && docker build -f Dockerfile-centos -t ci-base:centos .
 
 clean: jenkins/clean jenkins-slave/clean gerrit/clean
 

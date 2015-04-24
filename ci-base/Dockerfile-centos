@@ -1,0 +1,9 @@
+# ci-base
+#
+# Basic Docker image for CI services
+#
+
+FROM centos:6
+MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
+
+RUN yum -y install wget java-1.7.0-openjdk
