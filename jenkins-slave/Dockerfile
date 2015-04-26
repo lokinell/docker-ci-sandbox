@@ -9,17 +9,20 @@
 # docker run -d -h jenkins-slave1 --name jenkins-slave1 jenkins-slave
 #
 
-FROM ci-base:ubuntu
+FROM ci-base:centos
 MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
 
 EXPOSE 22
 
-RUN apt-get -qy install openssh-server git unzip
+RUN yum -y install openssh-server git unzip
 RUN mkdir /var/run/sshd
 RUN chmod 0755 /var/run/sshd
 
+# Host key
+RUN ssh-keygen -q -t rsa -f /etc/ssh/ssh_host_rsa_key -C '' -N ''
+
 # Jenkins user
-RUN useradd -c 'Jenkins CI slave' -d /var/lib/jenkins-slave -M -N -g nogroup -r jenkins
+RUN useradd -c 'Jenkins CI slave' -d /var/lib/jenkins-slave -M -N -g nobody -r jenkins
 RUN mkdir ~jenkins
 RUN chmod 755 ~jenkins
 
