@@ -50,7 +50,7 @@ gerrit:
         - /var/lib/gerrit/data
         - /var/lib/gerrit/db
         - /var/lib/gerrit/git
-        - /run/lock
+        - /var/lock
     links:
         - ldap:ldap
     environment:
