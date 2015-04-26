@@ -70,7 +70,7 @@ nexus:
         - 127.0.0.1:8082:8081
     volumes:
         - /var/lib/sonatype-work/nexus
-        - /run/lock
+        - /var/lock
     links:
         - ldap:ldap
     environment:

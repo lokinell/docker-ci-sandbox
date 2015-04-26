@@ -3,7 +3,7 @@
 # Docker container ENTRYPOINT for nexus
 #
 
-[ ! -f /run/lock/initialized ] || exec "$@"
+[ ! -f /var/lock/initialized ] || exec "$@"
 
 
 # The following steps are for initial bootstrapping only
@@ -134,6 +134,6 @@ cd "$workdir"
 
 
 # Proceed with CMD
-touch /run/lock/initialized
+touch /var/lock/initialized
 exec "$@"
 

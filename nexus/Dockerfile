@@ -9,7 +9,7 @@
 # docker run -d -p 127.0.0.1:8082:8081 -h nexus --name nexus nexus
 #
 
-FROM ci-base:ubuntu
+FROM ci-base:centos
 MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
 
 ENV nexus_version 2.11.2-06
@@ -17,7 +17,7 @@ ENV nexus_sha1 6f89cdef30029aae02c9c64397a6e0b92d6c34c1
 ENV TMP /tmp
 
 # Nexus user
-RUN useradd -c 'Nexus repository server' -d /var/lib/nexus -M -N -g nogroup -r nexus
+RUN useradd -c 'Nexus repository server' -d /var/lib/nexus -M -N -g nobody -G lock -r nexus
 
 # Download and install Nexus
 RUN cd /var/lib \
