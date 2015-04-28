@@ -9,12 +9,12 @@ JDK7_VERSION=7u67
 JDK7_FILE=jdk-$(JDK7_VERSION)-linux-x64.tar.gz
 
 MAVEN_VERSION=3.2.3
-MAVEN_DOWNLOAD_SITE=http://apache-mirror.rbc.ru/pub/apache
 MAVEN_FILE=apache-maven-$(MAVEN_VERSION)-bin.zip
-MAVEN_FILEPATH=maven/maven-3/$(MAVEN_VERSION)/binaries/$(MAVEN_FILE)
+MAVEN_DOWNLOAD_URL=http://search.maven.org/remotecontent?filepath=org/apache/maven/apache-maven/$(MAVEN_VERSION)/$(MAVEN_FILE)
 
 GROOVY_VERSION=2.3.6
 GROOVY_FILE=groovy-binary-$(GROOVY_VERSION).zip
+GROOVY_DOWNLOAD_URL=http://dl.bintray.com/groovy/maven/$(GROOVY_FILE)
 
 # Nexus as it visible from host system
 NEXUS_URL=http://localhost:8082/nexus
@@ -83,13 +83,15 @@ upload/$(JDK7_FILE):
 
 upload/$(MAVEN_FILE):
 	[ -d upload ] || mkdir upload
-	cd upload && wget -q -N $(MAVEN_DOWNLOAD_SITE)/$(MAVEN_FILEPATH)
-	checksum=$$(wget -q -O- http://www.apache.org/dist/$(MAVEN_FILEPATH).md5) \
-	&& [ $$(md5sum $@ | cut -f1 -d' ') = $$checksum ]
+	cd upload && wget -q --trust-server-names -N "$(MAVEN_DOWNLOAD_URL)"
+	checksum=$$(wget -q -O- "$(MAVEN_DOWNLOAD_URL).sha1") \
+	&& [ $$(sha1sum $@ | cut -f1 -d' ') = $$checksum ]
 
 upload/$(GROOVY_FILE):
 	[ -d upload ] || mkdir upload
-	cd upload && wget -q -N http://dl.bintray.com/groovy/maven/$(GROOVY_FILE)
+	cd upload && wget -q -N "$(GROOVY_DOWNLOAD_URL)"
+	checksum=$$(wget -q -O- "$(GROOVY_DOWNLOAD_URL).sha1") \
+	&& [ $$(sha1sum $@ | cut -f1 -d' ') = $$checksum ]
 
 #
 # Clean-up
