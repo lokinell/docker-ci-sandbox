@@ -35,7 +35,7 @@ if [ ! -f etc/upgraded ]; then
     touch etc/upgraded
 fi
 
-[ ! -f /run/lock/initialized ] || exec "$@"
+[ ! -f /var/lock/initialized ] || exec "$@"
 
 
 # The following steps are for initial bootstrapping only
@@ -85,8 +85,12 @@ config="git config -f project.config"
 #
 (
     cd "$TMP"
-    git clone -q "$git_url/All-Projects"
-    cd All-Projects
+    mkdir checkout
+    cd checkout
+    git init -q
+    git remote add origin "$git_url/All-Projects"
+    git fetch -q origin refs/meta/config
+    git checkout -q FETCH_HEAD
 
     # Add Verified label applicable to regular branches only
     $config         label.Verified.branch                   "refs/heads/*"
@@ -124,7 +128,7 @@ config="git config -f project.config"
 
     git push -q origin HEAD:refs/meta/config
     cd ..
-    rm -rf All-Projects
+    rm -rf checkout
 )
 
 
@@ -138,8 +142,12 @@ ssh -p $git_port $git_user@localhost gerrit create-project \
 
 (
     cd "$TMP"
-    git clone -q "$git_url/Open-Projects"
-    cd Open-Projects
+    mkdir checkout
+    cd checkout
+    git init -q
+    git remote add origin "$git_url/Open-Projects"
+    git fetch -q origin refs/meta/config
+    git checkout -q FETCH_HEAD
 
     # Access configuration
     echo 'global:Registered-Users                 	Registered Users' >groups
@@ -149,7 +157,7 @@ ssh -p $git_port $git_user@localhost gerrit create-project \
 
     git push -q origin HEAD:refs/meta/config
     cd ..
-    rm -rf Open-Projects
+    rm -rf checkout
 )
 
 
@@ -198,7 +206,7 @@ _SQL
 
 # Proceed with CMD
 #
-touch /run/lock/initialized
+touch /var/lock/initialized
 cd "$gerrit_home"
 exec "$@"
 

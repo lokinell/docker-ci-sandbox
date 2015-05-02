@@ -9,23 +9,24 @@
 #   --link dev-nexus:nexus --link dev-gerrit:gerrit jenkins
 #
 
-FROM ci-base:ubuntu
+FROM ci-base:centos
 MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
 
-ENV jenkins_version 1.596.2
+ENV jenkins_rpm_version 1.596.2-1.1
 ENV TMP /tmp
 
 # Install Jenkins
-RUN apt-get -qy install daemon psmisc
-RUN wget -q -O /tmp/jenkins.deb "http://pkg.jenkins-ci.org/debian-stable/binary/jenkins_${jenkins_version}_all.deb" \
-    && dpkg -i /tmp/jenkins.deb && rm /tmp/jenkins.deb
+RUN wget -q -O /tmp/jenkins.rpm "http://pkg.jenkins-ci.org/redhat-stable/jenkins-${jenkins_rpm_version}.noarch.rpm" \
+    && rpm -i --excludedocs /tmp/jenkins.rpm \
+    && rm /tmp/jenkins.rpm
 
-# - Enable remote JMX.
-# - Enable Extended read permission.
-# - Hack to run Jenkins in foreground.
-RUN echo 'JAVA_ARGS="$JAVA_ARGS -Dcom.sun.management.jmxremote.port=8099 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false"' >>/etc/default/jenkins \
-    && echo 'JAVA_ARGS="$JAVA_ARGS -Dhudson.security.ExtendedReadPermission=true"' >>/etc/default/jenkins \
-    && echo 'JENKINS_HOME="/var/lib/jenkins -f"' >>/etc/default/jenkins
+# Enable remote JMX.
+# Enable Extended read permission.
+RUN echo 'JENKINS_JAVA_OPTIONS="$JENKINS_JAVA_OPTIONS -Dcom.sun.management.jmxremote.port=8099 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false"' >>/etc/sysconfig/jenkins \
+    && echo 'JENKINS_JAVA_OPTIONS="$JENKINS_JAVA_OPTIONS -Dhudson.security.ExtendedReadPermission=true"' >>/etc/sysconfig/jenkins
+
+# Hack to run Jenkins in foreground.
+RUN sed -i 's/^\(PARAMS=.*\) --daemon/\1/' /etc/init.d/jenkins
 
 # Directories for build records and workspaces
 RUN mkdir /var/lib/jenkins-builds && chown jenkins /var/lib/jenkins-builds
@@ -35,7 +36,7 @@ WORKDIR /var/lib/jenkins
 
 USER jenkins
 
-# Pludins
+# Plugins
 #
 # Disable unnecessary plugins
 RUN mkdir plugins && cd plugins \
@@ -67,9 +68,10 @@ RUN cd plugins && echo \
 USER root
 
 # Basic configuration files and SSH keys
-ADD fs/var/lib/jenkins /var/lib/jenkins
+ADD fs/ /
 ADD ssh/ /var/lib/jenkins/.ssh
-RUN chown -R jenkins /var/lib/jenkins
+RUN chown -R jenkins /var/lib/jenkins \
+    && chmod 700 /usr/local/bin/*
 
 # entrypoint script handles initialization
 COPY entrypoint.sh /entrypoint
@@ -81,5 +83,5 @@ EXPOSE 8080
 EXPOSE 8099
 
 ENTRYPOINT ["/entrypoint"]
-CMD ["service", "jenkins", "start"]
+CMD ["jenkins"]
 

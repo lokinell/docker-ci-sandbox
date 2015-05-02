@@ -2,21 +2,19 @@
 #
 # Web UI for LDAP server
 #
-# Documentation:
-#  - https://help.ubuntu.com/community/InstallingphpLDAPadmin
 
-FROM ci-base:ubuntu
+FROM ci-base:centos
 MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
 
 EXPOSE 80
 
-RUN apt-get -qy install phpldapadmin
+RUN yum -y install phpldapadmin
 
 COPY phpldapadmin/config.php /etc/phpldapadmin/
-RUN chgrp www-data /etc/phpldapadmin/config.php
+COPY httpd/* /etc/httpd/conf.d/
+RUN chgrp apache /etc/phpldapadmin/config.php /etc/httpd/conf.d/*.conf \
+    && chmod 640 /etc/phpldapadmin/config.php /etc/httpd/conf.d/*.conf
 
-RUN echo "ServerName localhost" >/etc/apache2/conf.d/fqdn \
-    && echo "ErrorLog |cat" >/etc/apache2/conf.d/console
 
 CMD ["apachectl", "-k", "start", "-DFOREGROUND"]
 

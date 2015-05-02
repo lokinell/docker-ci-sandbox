@@ -9,16 +9,16 @@
 # sudo docker run -d -p 127.0.0.1:8083:8080 -p 127.0.0.1:29418:29418 -h gerrit --name gerrit gerrit 
 #
 
-FROM ci-base:ubuntu
+FROM ci-base:centos
 MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
 
 ENV gerrit_version 2.10
 ENV TMP /tmp
 
-RUN apt-get -qy install openssh-client git gitweb
+RUN yum -y install openssh-clients git gitweb
 
 # Gerrit user
-RUN useradd -c 'Gerrit code review' -d /var/lib/gerrit -M -N -g nogroup -r gerrit
+RUN useradd -c 'Gerrit code review' -d /var/lib/gerrit -M -N -g nobody -G lock -r -u 201 gerrit
 RUN mkdir ~gerrit && chown gerrit ~gerrit
 
 USER gerrit
@@ -57,7 +57,7 @@ RUN git config -f etc/gerrit.config gerrit.canonicalWebUrl 'http://localhost:808
     && git config -f etc/gerrit.config sendemail.smtpServer localhost \
     && git config -f etc/gerrit.config sshd.listenAddress '*:29418' \
     && git config -f etc/gerrit.config httpd.listenUrl 'http://*:8080/' \
-    && git config -f etc/gerrit.config gitweb.cgi '/usr/lib/cgi-bin/gitweb.cgi' \
+    && git config -f etc/gerrit.config gitweb.cgi '/var/www/git/gitweb.cgi' \
     && git config -f etc/gerrit.config gc.startTime 'Sat 23:30' \
     && git config -f etc/gerrit.config gc.interval '1 week'
 

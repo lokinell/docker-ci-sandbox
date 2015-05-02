@@ -16,9 +16,11 @@ ldap:
     build: ldap
     hostname: ldap
     volumes:
+        - /etc/openldap/slapd.d
         - /var/lib/ldap
-        - /run/lock
+        - /var/lock
     environment:
+        domain: asf.griddynamics.com
         ldap_admin_password: admin
         system_admin_password: admin
         jenkins_bot_password: jenkins
@@ -48,7 +50,7 @@ gerrit:
         - /var/lib/gerrit/data
         - /var/lib/gerrit/db
         - /var/lib/gerrit/git
-        - /run/lock
+        - /var/lock
     links:
         - ldap:ldap
     environment:
@@ -68,7 +70,7 @@ nexus:
         - 127.0.0.1:8082:8081
     volumes:
         - /var/lib/sonatype-work/nexus
-        - /run/lock
+        - /var/lock
     links:
         - ldap:ldap
     environment:
@@ -91,7 +93,7 @@ jenkins:
         - /var/lib/jenkins
         - /var/lib/jenkins-builds
         - /var/lib/jenkins-ws
-        - /run/lock
+        - /var/lock
     links:
         - ldap:ldap
         - gerrit:gerrit

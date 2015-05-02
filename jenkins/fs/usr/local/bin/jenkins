@@ -1,0 +1,46 @@
+#!/bin/sh
+#
+# Run Jenkins server in foreground
+#
+
+JENKINS_WAR="/usr/lib/jenkins/jenkins.war"
+JENKINS_CONFIG="/etc/sysconfig/jenkins"
+
+# Read config	
+[ -f "$JENKINS_CONFIG" ] && . "$JENKINS_CONFIG"
+
+# Search usable Java.
+candidates="
+/etc/alternatives/java
+/usr/lib/jvm/java-1.6.0/bin/java
+/usr/lib/jvm/jre-1.6.0/bin/java
+/usr/lib/jvm/java-1.7.0/bin/java
+/usr/lib/jvm/jre-1.7.0/bin/java
+/usr/lib/jvm/java-1.8.0/bin/java
+/usr/lib/jvm/jre-1.8.0/bin/java
+/usr/bin/java
+"
+for candidate in $candidates
+do
+  [ -x "$JENKINS_JAVA_CMD" ] && break
+  JENKINS_JAVA_CMD="$candidate"
+done
+
+JAVA_CMD="$JENKINS_JAVA_CMD $JENKINS_JAVA_OPTIONS -DJENKINS_HOME=$JENKINS_HOME -jar $JENKINS_WAR"
+PARAMS="--webroot=/var/cache/jenkins/war"
+[ -n "$JENKINS_PORT" ] && PARAMS="$PARAMS --httpPort=$JENKINS_PORT"
+[ -n "$JENKINS_LISTEN_ADDRESS" ] && PARAMS="$PARAMS --httpListenAddress=$JENKINS_LISTEN_ADDRESS"
+[ -n "$JENKINS_HTTPS_PORT" ] && PARAMS="$PARAMS --httpsPort=$JENKINS_HTTPS_PORT"
+[ -n "$JENKINS_HTTPS_KEYSTORE" ] && PARAMS="$PARAMS --httpsKeyStore=$JENKINS_HTTPS_KEYSTORE"
+[ -n "$JENKINS_HTTPS_KEYSTORE_PASSWORD" ] && PARAMS="$PARAMS --httpsKeyStorePassword='$JENKINS_HTTPS_KEYSTORE_PASSWORD'"
+[ -n "$JENKINS_HTTPS_LISTEN_ADDRESS" ] && PARAMS="$PARAMS --httpsListenAddress=$JENKINS_HTTPS_LISTEN_ADDRESS"
+[ -n "$JENKINS_AJP_PORT" ] && PARAMS="$PARAMS --ajp13Port=$JENKINS_AJP_PORT"
+[ -n "$JENKINS_AJP_LISTEN_ADDRESS" ] && PARAMS="$PARAMS --ajp13ListenAddress=$JENKINS_AJP_LISTEN_ADDRESS"
+[ -n "$JENKINS_DEBUG_LEVEL" ] && PARAMS="$PARAMS --debug=$JENKINS_DEBUG_LEVEL"
+[ -n "$JENKINS_HANDLER_STARTUP" ] && PARAMS="$PARAMS --handlerCountStartup=$JENKINS_HANDLER_STARTUP"
+[ -n "$JENKINS_HANDLER_MAX" ] && PARAMS="$PARAMS --handlerCountMax=$JENKINS_HANDLER_MAX"
+[ -n "$JENKINS_HANDLER_IDLE" ] && PARAMS="$PARAMS --handlerCountMaxIdle=$JENKINS_HANDLER_IDLE"
+[ -n "$JENKINS_ARGS" ] && PARAMS="$PARAMS $JENKINS_ARGS"
+
+exec runuser $JENKINS_USER -s /bin/sh -c "$JAVA_CMD $PARAMS"
+
