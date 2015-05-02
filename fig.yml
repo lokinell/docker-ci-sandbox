@@ -93,7 +93,7 @@ jenkins:
         - /var/lib/jenkins
         - /var/lib/jenkins-builds
         - /var/lib/jenkins-ws
-        - /run/lock
+        - /var/lock
     links:
         - ldap:ldap
         - gerrit:gerrit

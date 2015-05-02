@@ -18,7 +18,7 @@ echo "Test environment configuration..."
 [ "$ldap_admin_password" ]
 echo "Succeeded"
 
-[ ! -f /run/lock/initialized ] || exec "$@"
+[ ! -f /var/lock/initialized ] || exec "$@"
 
 
 # The following steps are for initial bootstrapping only
@@ -31,7 +31,7 @@ sed -i "s|<\(managerPassword\)>[^<]*</\1>|<\1>${password64}</\1>|" \
 
 # Proceed with CMD
 #
-touch /run/lock/initialized
+touch /var/lock/initialized
 cd "$jenkins_home"
 exec "$@"
 
