@@ -12,7 +12,7 @@
 FROM ci-base:centos
 MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
 
-ENV gerrit_version 2.10
+ENV gerrit_version 2.11.3
 ENV TMP /tmp
 
 RUN yum -y install openssh-clients git gitweb
@@ -37,7 +37,7 @@ RUN git config -f etc/gerrit.config database.type h2 \
     && git config -f etc/gerrit.config cache.directory cache
 
 # Install Gerrit
-RUN wget -q -O /tmp/gerrit.war "http://gerrit-releases.storage.googleapis.com/gerrit-${gerrit_version}.war" \
+RUN wget -q -O /tmp/gerrit.war "https://www.gerritcodereview.com/download/gerrit-${gerrit_version}.war" \
     && java -jar /tmp/gerrit.war init -d . --batch --no-auto-start \
         --install-plugin download-commands --install-plugin reviewnotes --install-plugin replication \
     && rm /tmp/gerrit.war

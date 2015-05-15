@@ -27,8 +27,8 @@ echo "Succeeded"
 if [ ! -f etc/upgraded ]; then
     # Gerrit 2.9, 2.10 (https://gerrit-documentation.storage.googleapis.com/ReleaseNotes/ReleaseNotes-2.10.html#_important_notes)
     java -jar bin/gerrit.war init -d .
-    # Gerrit 2.9 (see https://gerrit-documentation.storage.googleapis.com/ReleaseNotes/ReleaseNotes-2.9.html#_important_notes)
-    java -jar bin/gerrit.war reindex -d . --recheck-mergeable
+    # Gerrit 2.9, 2.11 (see https://gerrit-documentation.storage.googleapis.com/ReleaseNotes/ReleaseNotes-2.9.html#_important_notes)
+    java -jar bin/gerrit.war reindex -d .
     # Drop unused objects (upgrade to 2.10)
     echo "ALTER TABLE accounts DROP COLUMN show_user_in_review;" \
         | java -jar bin/gerrit.war gsql
