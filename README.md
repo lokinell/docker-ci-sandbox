@@ -8,7 +8,7 @@ Set of Docker containers to run CD automation services
  - Sonatype Nexus.
 
 The services are configured to work together.
-Containers run on a single machine and orchestrated by Fig.
+Containers run on a single machine and orchestrated by Docker Compose.
 Services listen on localhost (127.0.0.1) address and not visible from outside.
 
 It works on recent Linux distributions supported by Docker (e.g. Ubuntu 12.04
@@ -22,15 +22,16 @@ and minimum changes made to stock configurations.
 Install prerequisites
 ----------------------
 
- - [Docker](https://docker.com/) 1.3 and newer.
- - [Fig](http://www.fig.sh/) ("Make" for Docker) 1.0 and newer.
+ - [Docker](https://docker.com/) 1.3 or newer.
+ - [Docker Compose](https://docs.docker.com/compose/) ("Make" for Docker) 1.2
+   or newer.
  - GNU Make.
 
 ### Installation steps for Ubuntu/Debian
 
 Docker - see [installation manual](https://docs.docker.com/installation/ubuntulinux/).
 
-Fig - see [installation manual](http://www.fig.sh/install.html).
+Docker Compose - see [installation manual](https://docs.docker.com/compose/install/).
 
 GNU make:
 
@@ -48,7 +49,7 @@ Relogin to get "docker" group membership.
 
 Docker - see [installation manual](https://docs.docker.com/installation/mac/).
 
-Fig - see [installation manual](http://www.fig.sh/install.html).
+Docker Compose - see [installation manual](https://docs.docker.com/compose/install/).
 
 GNU make (assuming [Homebew](http://brew.sh/) and GNU utils are installed):
 
@@ -100,7 +101,7 @@ jenkinsslave | -           | -           | -
                           \              /              /
                            +-- gerrit <-+--------------+
 
-It means `fig up jenkins` also brings up 4 service containers Jenkins depends
+It means `docker-compose up jenkins` also brings up 4 service containers Jenkins depends
 on.
 
 ### Start / Stop / Upgrade service containers
@@ -112,26 +113,26 @@ the service containers.
 
 Create and start a service container:
 
-    fig up -d {service}
+    docker-compose up -d {service}
 
 Stop a service:
 
-    fig stop {service}
+    docker-compose stop {service}
 
 start it again:
 
-    fig start {service}
+    docker-compose start {service}
 
 Upgrade to the current code rebuild the images, stop the service:
 
-    fig build {service}
+    docker-compose build {service}
 
 and then proceed with steps to start the service (see above).
 
 To perform an action (create, start, stop etc) on the whole setup use the above
 commands without `{service}`, for example
 
-    fig up -d
+    docker-compose up -d
 
 
 Upload bundles for Jenkins build tools
@@ -181,8 +182,8 @@ For Docker itself - uncomment in `/etc/default/docker`:
 
     export http_proxy="http://172.17.42.1:3128/"
 
-For scripts inside Dockerfile and containers - `fig.yml` takes advantage
-of `http_proxy` environment variable. Run Fig as follows:
+For scripts inside Dockerfile and containers - `docker-compose.yml` takes advantage
+of `http_proxy` environment variable. Run Compose as follows:
 
-    export http_proxy=http://172.17.42.1:3128/ fig ...
+    export http_proxy=http://172.17.42.1:3128/ docker-compose ...
 
