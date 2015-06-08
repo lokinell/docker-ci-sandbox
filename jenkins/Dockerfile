@@ -66,6 +66,7 @@ RUN cd plugins && echo \
     ${plugin_site}/copyartifact/1.36.1/copyartifact.hpi \
     ${plugin_site}/cloudbees-folder/4.10/cloudbees-folder.hpi \
     ${plugin_site}/envinject/1.92.1/envinject.hpi \
+    ${plugin_site}/job-dsl/1.39/job-dsl.hpi \
     | xargs -t -n1 wget -q -N
 
 USER root
