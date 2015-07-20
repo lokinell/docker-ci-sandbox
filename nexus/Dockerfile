@@ -12,8 +12,8 @@
 FROM ci-base:centos
 MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
 
-ENV nexus_version 2.11.2-06
-ENV nexus_sha1 6f89cdef30029aae02c9c64397a6e0b92d6c34c1
+ENV nexus_version 2.11.4-01
+ENV nexus_sha1 42f47b1c1ca572f899d7ff01cccce9b7f3e6071d
 ENV TMP /tmp
 
 # Nexus user
