@@ -15,7 +15,8 @@ MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
 ENV gerrit_version 2.10
 ENV TMP /tmp
 
-RUN yum -y install openssh-clients git gitweb
+RUN yum -y install openssh-clients git gitweb \
+    && yum -y clean all && rm -rf /var/cache/*
 
 # Gerrit user
 RUN useradd -c 'Gerrit code review' -d /var/lib/gerrit -M -N -g nobody -G lock -r -u 201 gerrit

@@ -6,7 +6,8 @@
 FROM centos:6
 MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
 
-RUN yum -y install tar wget java-1.7.0-openjdk
+RUN yum -y install tar wget java-1.7.0-openjdk \
+    && yum -y clean all && rm -rf /var/cache/*
 
 # Enable EPEL repository (https://fedoraproject.org/wiki/EPEL)
 RUN yum -y install epel-release

@@ -8,7 +8,8 @@ MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
 
 EXPOSE 80
 
-RUN yum -y install phpldapadmin
+RUN yum -y install phpldapadmin \
+    && yum -y clean all && rm -rf /var/cache/*
 
 COPY phpldapadmin/config.php /etc/phpldapadmin/
 COPY httpd/* /etc/httpd/conf.d/

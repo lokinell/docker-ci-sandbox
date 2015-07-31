@@ -10,7 +10,8 @@ MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
 
 EXPOSE 389
 
-RUN yum -y install openldap-clients openldap-servers
+RUN yum -y install openldap-clients openldap-servers \
+    && yum -y clean all && rm -rf /var/cache/*
 
 # entrypoint script handles DB initialization
 COPY entrypoint.sh /entrypoint

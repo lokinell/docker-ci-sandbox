@@ -14,7 +14,8 @@ MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
 
 EXPOSE 22
 
-RUN yum -y install openssh-server git unzip
+RUN yum -y install openssh-server git unzip \
+    && yum -y clean all && rm -rf /var/cache/*
 RUN mkdir /var/run/sshd
 RUN chmod 0755 /var/run/sshd
 
