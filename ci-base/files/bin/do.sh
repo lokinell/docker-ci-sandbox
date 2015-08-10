@@ -7,7 +7,7 @@
 # "-u" Docker CLI option. It may or may not be "root".
 #
 
-set -e ${DEBUG:+-x}
+set -e
 
 run_sh() {
     for script in "$@"; do
@@ -16,17 +16,12 @@ run_sh() {
     done
 }
 
-on_failure() {
-    echo "Initialization failure${script:+: $script exit status $?}" >&2
-}
-trap on_failure EXIT
-
 
 # Initialize container filesystem when it is created (on `docker run`).
 # It handles service creation or upgrade.
 #
 # It scans /opt/<package>/ and /opt/<provider>/<package>/ directories, then
-# looks to etc/init/container.d/ and run all *.sh scripts there using Bash.
+# looks to etc/init/container.d/ and run all *.sh scripts there using `sh`.
 #
 # /var/run/ is local to the container, so it is persisted with the container.
 #
