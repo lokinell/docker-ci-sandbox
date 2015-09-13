@@ -10,9 +10,9 @@
 set -e
 
 run_sh() {
-    for script in "$@"; do
-        [ -f "$script" ] || continue
-        $SHELL "$script"
+    scripts=$(find "$@" -maxdepth 1 -type f -name '*.sh' 2>/dev/null | sort)
+    for script in $scripts; do
+        bash "$script"
     done
 }
 
@@ -28,8 +28,8 @@ run_sh() {
 if [ ! -f /var/run/entrypoint/initialized ]; then
 
     echo "Container initialization..."
-    run_sh /opt/*/etc/init/container.d/*.sh \
-            /opt/*/*/etc/init/container.d/*.sh
+    run_sh /opt/*/etc/init/container.d \
+            /opt/*/*/etc/init/container.d
     echo "Container initialization complete"
 
     touch /var/run/entrypoint/initialized
@@ -43,8 +43,8 @@ fi
 if [ ! -f /var/opt/entrypoint/initialized ]; then
 
     echo "Volumes initialization..."
-    run_sh /opt/*/etc/init/volume.d/*.sh \
-            /opt/*/*/etc/init/volume.d/*.sh
+    run_sh /opt/*/etc/init/volume.d \
+            /opt/*/*/etc/init/volume.d
     echo "Volumes initialization complete"
 
     touch /var/opt/entrypoint/initialized
