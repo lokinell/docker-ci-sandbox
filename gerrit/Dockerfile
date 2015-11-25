@@ -12,7 +12,7 @@
 FROM ci-base:centos
 MAINTAINER Kirill Evstigneev <kevstigneev@griddynamics.com>
 
-ENV gerrit_version 2.11.3
+ENV gerrit_version 2.11.5
 ENV TMP /tmp
 
 RUN yum -y install openssh-clients git gitweb
