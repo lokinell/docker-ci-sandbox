@@ -37,6 +37,13 @@ RUN git config -f etc/gerrit.config database.type h2 \
     && git config -f etc/gerrit.config gerrit.basePath git \
     && git config -f etc/gerrit.config cache.directory cache
 
+# Install BouncyCastle libs.
+# FIXME: It's a work around flaky downloads from the official site.
+# Library version should be kept in sync with Gerrit.
+RUN mkdir -p lib \
+    && wget -q -O lib/bcpkix-jdk15on-152.jar "https://repo1.maven.org/maven2/org/bouncycastle/bcpkix-jdk15on/1.53/bcpkix-jdk15on-1.53.jar" \
+    && wget -q -O lib/bcprov-jdk15on-152.jar "https://repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.52/bcprov-jdk15on-1.52.jar"
+
 # Install Gerrit
 RUN wget -q -O /tmp/gerrit.war "https://www.gerritcodereview.com/download/gerrit-${gerrit_version}.war" \
     && java -jar /tmp/gerrit.war init -d . --batch --no-auto-start \
