@@ -63,19 +63,19 @@ gerrit:
 #   $ fig up -d nexus
 #
 
-# nexus:
-#     build: nexus
-#     hostname: nexus
-#     ports:
-#         - 8082:8081
-#     volumes:
-#         - /var/lib/sonatype-work/nexus
-#         - /var/lock
-#     links:
-#         - ldap:ldap
-#     environment:
-#         ldap_admin_password: admin
-#         http_proxy:
+nexus:
+    build: nexus
+    hostname: nexus
+    ports:
+        - 8082:8081
+    volumes:
+        - /var/lib/sonatype-work/nexus
+        - /var/lock
+    links:
+        - ldap:ldap
+    environment:
+        ldap_admin_password: admin
+        http_proxy:
 
 
 # Jenkins service
@@ -84,24 +84,24 @@ gerrit:
 #   $ fig up -d jenkins
 #
 
-# jenkins:
-#     build: jenkins
-#     hostname: jenkins
-#     ports:
-#         - 8081:8080
-#     volumes:
-#         - /var/lib/jenkins
-#         - /var/lib/jenkins-builds
-#         - /var/lib/jenkins-ws
-#         - /var/lock
-#     links:
-#         - ldap:ldap
-#         - gerrit:gerrit
-#         # - nexus:nexus
-#         - jenkinsslave
-#     environment:
-#         ldap_admin_password: admin
-#         http_proxy:
+jenkins:
+    build: jenkins
+    hostname: jenkins
+    ports:
+        - 8081:8080
+    volumes:
+        - /home/var/lib/jenkins:/var/lib/jenkins
+        - /home/var/lib/jenkins-builds:/var/lib/jenkins-builds
+        - /home/var/lib/jenkins-ws:/var/lib/jenkins-ws
+        - /var/lock
+    links:
+        - ldap:ldap
+        - gerrit:gerrit
+        - nexus:nexus
+        - jenkinsslave
+    environment:
+        ldap_admin_password: admin
+        http_proxy:
 
 
 # Jenkins slave
@@ -110,11 +110,11 @@ gerrit:
 #   $ fig up -d jenkinsslave
 #
 
-# jenkinsslave:
-#     build: jenkins-slave
-#     links:
-#         - gerrit:gerrit
-#         # - nexus:nexus
-#     environment:
-#         http_proxy:
+jenkinsslave:
+    build: jenkins-slave
+    links:
+        - gerrit:gerrit
+        - nexus:nexus
+    environment:
+        http_proxy:
 
