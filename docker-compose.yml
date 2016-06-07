@@ -90,9 +90,9 @@ jenkins:
     ports:
         - 8081:8080
     volumes:
-        - /home/var/lib/jenkins:/var/lib/jenkins
-        - /home/var/lib/jenkins-builds:/var/lib/jenkins-builds
-        - /home/var/lib/jenkins-ws:/var/lib/jenkins-ws
+        - /var/lib/jenkins
+        - /var/lib/jenkins-builds
+        - /var/lib/jenkins-ws
         - /var/lock
     links:
         - ldap:ldap
