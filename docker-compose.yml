@@ -20,10 +20,11 @@ ldap:
         - /var/lib/ldap
         - /var/lock
     environment:
-        domain: asf.griddynamics.com
+        domain: datarx.cn
         ldap_admin_password: admin
         system_admin_password: admin
         jenkins_bot_password: jenkins
+        user_password: user
 
 ldapadmin:
     build: ldap-admin

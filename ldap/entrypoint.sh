@@ -22,6 +22,7 @@ echo "Test environment configuration..."
 [ "$ldap_admin_password" ]
 [ "$system_admin_password" ]
 [ "$jenkins_bot_password" ]
+[ "$user_password" ]
 echo "Succeeded"
 
 ldap_domain_name=$(echo "$domain" | cut -f1 -d.)
@@ -117,6 +118,12 @@ sn: Jenkins CI
 uid: jenkins-bot
 userpassword: $(slappasswd -s "$jenkins_bot_password")
 
+dn: uid=user,ou=people,${ldap_domain_dn}
+objectclass: inetOrgPerson
+cn: user
+sn: user
+uid: user
+userpassword: $(slappasswd -s "${user_password}")
 # System groups
 
 dn: cn=admins,ou=groups,${ldap_domain_dn}
