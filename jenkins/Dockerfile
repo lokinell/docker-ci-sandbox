@@ -16,7 +16,7 @@ ENV jenkins_rpm_version 1.609.3-1.1
 ENV TMP /tmp
 
 # Install Jenkins
-RUN wget -q -O /tmp/jenkins.rpm "http://pkg.jenkins-ci.org/redhat-stable/jenkins-${jenkins_rpm_version}.noarch.rpm" \
+RUN wget -q -O /tmp/jenkins.rpm "http://ftp.tsukuba.wide.ad.jp/software/jenkins/redhat-stable/jenkins-${jenkins_rpm_version}.noarch.rpm" \
     && rpm -i --excludedocs /tmp/jenkins.rpm \
     && rm /tmp/jenkins.rpm
 

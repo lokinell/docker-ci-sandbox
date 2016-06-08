@@ -6,7 +6,7 @@
 # sudo docker build -t gerrit:latest .
 #
 # Run:
-# sudo docker run -d -p 127.0.0.1:8083:8080 -p 127.0.0.1:29418:29418 -h gerrit --name gerrit gerrit 
+# sudo docker run -d -p 127.0.0.1:8083:8080 -p 127.0.0.1:29418:29418 -h gerrit --name gerrit gerrit
 #
 
 FROM ci-base:centos
@@ -56,11 +56,11 @@ RUN git config -f etc/gerrit.config gerrit.canonicalWebUrl 'http://localhost:808
     && git config -f etc/gerrit.config container.javaOptions '-Dcom.sun.management.jmxremote.port=8099 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false' \
     && git config -f etc/gerrit.config auth.type LDAP \
     && git config -f etc/gerrit.config ldap.server 'ldap://ldap' \
-    && git config -f etc/gerrit.config ldap.accountBase 'ou=people,dc=asf,dc=griddynamics,dc=com' \
+    && git config -f etc/gerrit.config ldap.accountBase 'ou=people,dc=datarx,dc=cn' \
     && git config -f etc/gerrit.config ldap.accountPattern 'uid=${username}' \
     && git config -f etc/gerrit.config ldap.accountFullName 'displayName' \
     && git config -f etc/gerrit.config ldap.accountEmailAddress 'mail' \
-    && git config -f etc/gerrit.config ldap.groupBase 'ou=groups,dc=asf,dc=griddynamics,dc=com' \
+    && git config -f etc/gerrit.config ldap.groupBase 'ou=groups,dc=datarx,dc=cn' \
     && git config -f etc/gerrit.config ldap.groupMemberPattern '(|(member=${dn})(uniqueMember=${dn}))' \
     && git config -f etc/gerrit.config sendemail.smtpServer localhost \
     && git config -f etc/gerrit.config sshd.listenAddress '*:29418' \

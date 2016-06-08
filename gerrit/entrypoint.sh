@@ -179,7 +179,7 @@ ssh -p $git_port $git_user@localhost gerrit create-account \
     --ssh-key "'$jenkins_key'" \
     --group "'Non-Interactive Users'" \
     --full-name "'Jenkins CI'" \
-    --email jenkins-bot@cisandbox.asf.griddynamics.com \
+    --email jenkins-bot@datarx.cn \
     jenkins-bot
 ssh -p $git_port $git_user@localhost gerrit set-account \
     --add-ssh-key "'$jenkinsslave_key'" \
@@ -196,10 +196,10 @@ bin/gerrit.sh stop
 #
 java -jar bin/gerrit.war gsql <<_SQL
 INSERT INTO ACCOUNT_GROUP_BY_ID (GROUP_ID, INCLUDE_UUID)
-    SELECT GROUP_ID, 'ldap:cn=admins,ou=groups,dc=asf,dc=griddynamics,dc=com'
+    SELECT GROUP_ID, 'ldap:cn=admins,ou=groups,dc=datarx,dc=cn'
         FROM ACCOUNT_GROUP_NAMES WHERE NAME='Administrators';
 INSERT INTO ACCOUNT_GROUP_BY_ID (GROUP_ID, INCLUDE_UUID)
-    SELECT GROUP_ID, 'ldap:cn=robots,ou=groups,dc=asf,dc=griddynamics,dc=com'
+    SELECT GROUP_ID, 'ldap:cn=robots,ou=groups,dc=datarx,dc=cn'
         FROM ACCOUNT_GROUP_NAMES WHERE NAME='Non-Interactive Users';
 _SQL
 

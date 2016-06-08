@@ -93,12 +93,12 @@
   </authorizationStrategy>
   <securityRealm class="hudson.security.LDAPSecurityRealm" plugin="ldap@1.6">
     <server>ldap</server>
-    <rootDN>dc=asf,dc=griddynamics,dc=com</rootDN>
+    <rootDN>dc=datarx,dc=cn</rootDN>
     <inhibitInferRootDN>false</inhibitInferRootDN>
     <userSearchBase>ou=people</userSearchBase>
     <userSearch>uid={0}</userSearch>
     <groupSearchBase>ou=groups</groupSearchBase>
-    <managerDN>cn=admin,dc=asf,dc=griddynamics,dc=com</managerDN>
+    <managerDN>cn=admin,dc=datarx,dc=cn</managerDN>
     <managerPassword>base64_encoded_password</managerPassword>
     <disableMailAddressResolver>false</disableMailAddressResolver>
   </securityRealm>

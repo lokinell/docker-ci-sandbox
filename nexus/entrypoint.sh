@@ -31,8 +31,8 @@ cat >conf/ldap.xml <<_LDAP_XML
 <ldapConfiguration>
   <version>2.8.0</version>
   <connectionInfo>
-    <searchBase>dc=asf,dc=griddynamics,dc=com</searchBase>
-    <systemUsername>cn=admin,dc=asf,dc=griddynamics,dc=com</systemUsername>
+    <searchBase>dc=datarx,dc=cn</searchBase>
+    <systemUsername>cn=admin,dc=datarx,dc=cn</systemUsername>
     <systemPassword>${ldap_admin_password}</systemPassword>
     <authScheme>simple</authScheme>
     <protocol>ldap</protocol>
